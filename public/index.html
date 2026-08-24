@@ -1,0 +1,711 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thai Word Embedding — Wongnai 40k Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>body { font-family: 'Prompt', sans-serif; } .content-font { font-family: 'Sarabun', sans-serif; }</style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+  <header class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center border border-white/20 shadow-inner">
+          <i class="fa-solid fa-brain text-xl text-yellow-300"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight">Thai Word Embedding</h1>
+          <p class="text-xs text-indigo-200">สื่อการสอนสถิติและความหมายภาษาไทย (Wongnai 40k + Gensim)</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-xs">
+        <span class="bg-indigo-900/50 backdrop-blur px-3 py-1.5 rounded-full border border-indigo-400/30 flex items-center gap-1.5">
+          <i class="fa-solid fa-database text-yellow-400"></i> 40,000 รีวิว
+        </span>
+        <span class="bg-indigo-900/50 backdrop-blur px-3 py-1.5 rounded-full border border-indigo-400/30 flex items-center gap-1.5">
+          <i class="fa-solid fa-cube text-emerald-400"></i> 100 มิติ (Skip-Gram)
+        </span>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-white/10">
+      <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto py-2 scrollbar-none text-sm font-medium" id="tabNav">
+        <button onclick="switchTab('similar')" id="tab-btn-similar" class="tab-btn active px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 bg-white text-indigo-800 shadow-sm font-semibold whitespace-nowrap">
+          <i class="fa-solid fa-magnifying-glass"></i> 1. คำใกล้เคียง
+        </button>
+        <button onclick="switchTab('limitations')" id="tab-btn-limitations" class="tab-btn px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 text-indigo-100 hover:bg-white/10 whitespace-nowrap">
+          <i class="fa-solid fa-triangle-exclamation text-amber-300"></i> 2. ข้อจำกัด ('แพง' vs 'ถูก')
+        </button>
+        <button onclick="switchTab('docsearch')" id="tab-btn-docsearch" class="tab-btn px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 text-indigo-100 hover:bg-white/10 whitespace-nowrap">
+          <i class="fa-solid fa-file-lines text-cyan-300"></i> 3. ค้นหารีวิว (Doc Vector)
+        </button>
+        <button onclick="switchTab('clusters')" id="tab-btn-clusters" class="tab-btn px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 text-indigo-100 hover:bg-white/10 whitespace-nowrap">
+          <i class="fa-solid fa-chart-pie text-pink-300"></i> 4. จัดกลุ่มคำ (k-Means)
+        </button>
+        <button onclick="switchTab('stats')" id="tab-btn-stats" class="tab-btn px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 text-indigo-100 hover:bg-white/10 whitespace-nowrap">
+          <i class="fa-solid fa-scale-balanced text-emerald-300"></i> 5. ขนาดข้อมูล & Transfer
+        </button>
+        <button onclick="switchTab('lesson')" id="tab-btn-lesson" class="tab-btn px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 text-indigo-100 hover:bg-white/10 whitespace-nowrap">
+          <i class="fa-solid fa-graduation-cap text-yellow-300"></i> แผนการสอน & AI Studio
+        </button>
+      </nav>
+    </div>
+  </header>
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- TAB 1: Similar Words -->
+    <section id="pane-similar" class="tab-pane block space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700">ช่วงที่ 2 & 3</span>
+              <h2 class="text-xl font-bold text-slate-800">ค้นหาคำที่มีความหมาย / บริบทใกล้เคียง</h2>
+            </div>
+            <p class="text-sm text-slate-500 mt-1 content-font">ทดสอบว่าโมเดล Word2Vec เรียนรู้ความสัมพันธ์ของคำจากบริบทประโยคในคลังรีวิวอาหารอย่างไร</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5 text-xs">
+            <span class="text-slate-400 font-medium">คำแนะนำ:</span>
+            <button onclick="querySimilar('อร่อย')" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition border border-slate-200">อร่อย</button>
+            <button onclick="querySimilar('ส้มตำ')" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition border border-slate-200">ส้มตำ</button>
+            <button onclick="querySimilar('กาแฟ')" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition border border-slate-200">กาแฟ</button>
+            <button onclick="querySimilar('บริการ')" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition border border-slate-200">บริการ</button>
+            <button onclick="querySimilar('ราคา')" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition border border-slate-200">ราคา</button>
+            <button onclick="querySimilar('แซ่บ')" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition border border-slate-200">แซ่บ</button>
+          </div>
+        </div>
+
+        <form onsubmit="handleSimilarSubmit(event)" class="mt-6 flex gap-3 max-w-2xl">
+          <div class="relative flex-grow">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <input type="text" id="similarInput" value="อร่อย" placeholder="พิมพ์คำภาษาไทย เช่น อร่อย, ส้มตำ, กาแฟ..." 
+                   class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 text-base font-medium">
+          </div>
+          <button type="submit" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition shadow-sm flex items-center gap-2 whitespace-nowrap">
+            <span>ค้นหา</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </form>
+
+        <div id="similarLoading" class="hidden py-12 text-center text-slate-400">
+          <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-500 mb-3"></i>
+          <p class="text-sm">กำลังคำนวณ Cosine Similarity จากเวกเตอร์ 100 มิติ...</p>
+        </div>
+
+        <div id="similarResultContainer" class="mt-8 space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div class="lg:col-span-6 bg-slate-50/70 border border-slate-200 rounded-xl p-5">
+              <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4 flex items-center justify-between">
+                <span>Top 10 คำที่ใกล้เคียงที่สุด</span>
+                <span id="currentQueryBadge" class="text-xs font-normal normal-case text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-200">คำค้น: อร่อย</span>
+              </h3>
+              <div id="similarTableBody" class="space-y-2.5"></div>
+            </div>
+
+            <div class="lg:col-span-6 bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+              <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-3">แผนภูมิเปรียบเทียบคะแนน Cosine Similarity</h3>
+              <div class="h-64 relative">
+                <canvas id="similarChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div id="misspellingBox" class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-amber-900">
+            <div class="flex items-start gap-3.5">
+              <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-lightbulb"></i>
+              </div>
+              <div class="space-y-2">
+                <h4 id="misspellingTitle" class="font-bold text-amber-950">จุดสังเกตชวนคิด: ทำไมคำสะกดผิดถึงโผล่มาใกล้คำที่สะกดถูก?</h4>
+                <p id="misspellingExp" class="text-sm text-amber-800 leading-relaxed content-font">
+                  โมเดลไม่ได้เปิดพจนานุกรม มันดูแค่ว่าคำไหนปรากฏใน <strong>"บริบทเดียวกัน (Distributional Hypothesis)"</strong> 
+                  คนที่พิมพ์ <em>อร่ย</em> หรือ <em>อน่อย</em> ใช้มันในประโยคแบบเดียวกับ <em>อร่อย</em> โมเดลจึงสรุปว่าเป็นคำที่มีความหมายเหมือนกัน
+                </p>
+                <div id="misspellingList" class="flex flex-wrap gap-2 pt-1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: Limitations -->
+    <section id="pane-limitations" class="tab-pane hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+        <div class="border-b border-slate-100 pb-5">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">ช่วงที่ 4</span>
+            <h2 class="text-xl font-bold text-slate-800">ข้อจำกัดของ Word2Vec: 'แพง' กับ 'ถูก'</h2>
+          </div>
+          <p class="text-sm text-slate-500 mt-1 content-font">ทำไมคำที่มีความหมายตรงกันข้ามโดยสิ้นเชิง ถึงได้คะแนนความคล้าย (Cosine Similarity) สูงถึง ~0.77?</p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
+            <h3 class="font-semibold text-slate-700 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-arrows-left-right text-indigo-500"></i> การวัดความคล้ายระหว่างคู่คำตรงข้าม
+            </h3>
+            <div id="limitationsTable" class="space-y-3"></div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 text-indigo-950">
+              <div class="flex items-start gap-3">
+                <i class="fa-solid fa-circle-question text-indigo-600 text-xl mt-0.5"></i>
+                <div>
+                  <h4 class="font-bold">คำถามนำในห้องเรียน</h4>
+                  <p class="text-sm text-indigo-800 mt-1 content-font"><em>"แพง กับ ถูก ความหมายตรงข้ามกันชัดๆ ทำไมโมเดลบอกว่าคล้ายกันถึง 0.77?"</em></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-emerald-950">
+              <div class="flex items-start gap-3">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-xl mt-0.5"></i>
+                <div>
+                  <h4 class="font-bold">คำอธิบายเชิงทฤษฎี (Context Similarity)</h4>
+                  <p class="text-sm text-emerald-800 mt-1 leading-relaxed content-font">
+                    ทั้งสองคำมักปรากฏในโครงสร้างประโยคเดียวกัน เช่น:<br>
+                    • <em>"ร้านนี้อาหาร [แพง] มาก แต่รสชาติดี"</em><br>
+                    • <em>"ร้านนี้อาหาร [ถูก] มาก แต่รสชาติดี"</em><br>
+                    โมเดลวัดความคล้ายของ <strong>"คำแวดล้อม"</strong> ไม่ได้เข้าใจตรรกะหรืออารมณ์ความรู้สึก
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-5 text-rose-950">
+              <div class="flex items-start gap-3">
+                <i class="fa-solid fa-triangle-exclamation text-rose-600 text-xl mt-0.5"></i>
+                <div>
+                  <h4 class="font-bold">ข้อควรระวังในการนำไปใช้งานจริง (Pitfall)</h4>
+                  <p class="text-sm text-rose-800 mt-1 leading-relaxed content-font">
+                    หากนำเวกเตอร์ดิบไปทำ <strong>Sentiment Analysis (วิเคราะห์รีวิวว่าชมไหนด่า)</strong> จะพลาดทันที 
+                    เพราะโมเดลแยก <em>"อร่อย"</em> กับ <em>"ไม่อร่อย"</em> หรือ <em>"ดี"</em> กับ <em>"แย่"</em> ได้ยาก ต้องใช้เทคนิคเฉพาะเพิ่มเติม
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- TAB 3: Doc Search -->
+    <section id="pane-docsearch" class="tab-pane hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700">ช่วงที่ 5</span>
+              <h2 class="text-xl font-bold text-slate-800">จากคำสู่เอกสาร: ค้นหารีวิวที่พูดเรื่องเดียวกัน</h2>
+            </div>
+            <p class="text-sm text-slate-500 mt-1 content-font">รวมเวกเตอร์ของทุกคำในรีวิวด้วยวิธี <strong>Average Word Vectors</strong> เพื่อค้นหาเอกสารที่มีความหมายใกล้กัน</p>
+          </div>
+          <button onclick="queryDocSearch(null, true)" class="px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-medium rounded-xl shadow-sm transition flex items-center gap-2 text-sm whitespace-nowrap">
+            <i class="fa-solid fa-dice"></i>
+            <span>สุ่มรีวิวต้นแบบ (Random)</span>
+          </button>
+        </div>
+
+        <div class="mt-6 bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-xl p-6 shadow-md border border-slate-800">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-xs uppercase tracking-wider text-cyan-300 font-semibold flex items-center gap-1.5">
+              <i class="fa-solid fa-bookmark"></i> รีวิวต้นแบบ (Target Review)
+            </span>
+            <span id="targetRatingStars" class="text-yellow-400 text-sm">★★★★★</span>
+          </div>
+          <p id="targetReviewText" class="text-base md:text-lg leading-relaxed text-slate-100 content-font italic">"กำลังโหลดรีวิว..."</p>
+        </div>
+
+        <div class="mt-6">
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass-chart text-cyan-600"></i> 5 รีวิวที่มีความหมายใกล้เคียงที่สุด
+          </h3>
+          <div id="similarReviewsList" class="space-y-3"></div>
+        </div>
+
+        <div class="mt-6 bg-cyan-50 border border-cyan-200 rounded-xl p-5 text-cyan-950">
+          <div class="flex items-start gap-3">
+            <i class="fa-solid fa-globe text-cyan-600 text-xl mt-0.5"></i>
+            <div class="space-y-1">
+              <h4 class="font-bold">เชื่อมโยงโลกความเป็นจริง (Real-world Applications)</h4>
+              <p class="text-sm text-cyan-800 leading-relaxed content-font">
+                นี่คือหลักการเดียวกับที่ <strong>Netflix</strong> ใช้แนะนำภาพยนตร์, <strong>Shopee / Lazada</strong> แนะนำสินค้าที่คล้ายกัน, 
+                และระบบ <strong>AI RAG (Retrieval-Augmented Generation)</strong> ที่ค้นหาเอกสารความรู้มาให้ LLM ใช้ตอบคำถาม!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: Clusters -->
+    <section id="pane-clusters" class="tab-pane hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+        <div class="border-b border-slate-100 pb-5">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-pink-100 text-pink-700">ช่วงที่ 6</span>
+            <h2 class="text-xl font-bold text-slate-800">จัดกลุ่มคำอัตโนมัติด้วย k-Means Clustering</h2>
+          </div>
+          <p class="text-sm text-slate-500 mt-1 content-font">เมื่อเวกเตอร์ 100 มิติถูกจัดกลุ่ม 8 คลัสเตอร์ คำในหมวดเดียวกันจะรวมตัวกันโดยไม่มีใครสอน</p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div class="lg:col-span-6 space-y-3" id="clustersContainer"></div>
+
+          <div class="lg:col-span-6 bg-slate-50 rounded-xl p-5 border border-slate-200 sticky top-24">
+            <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-2 flex items-center justify-between">
+              <span>แผนผังเวกเตอร์ 2 มิติ (PCA Projection)</span>
+              <span class="text-xs text-slate-400 font-normal">ลดจาก 100 มิติ -> 2 มิติ</span>
+            </h3>
+            <div class="h-80 relative bg-white rounded-lg border border-slate-200 p-2">
+              <canvas id="pcaChart"></canvas>
+            </div>
+            <div class="mt-4 bg-pink-50 border border-pink-200 rounded-lg p-3 text-pink-900 text-xs leading-relaxed content-font">
+              <strong>💡 กิจกรรมในห้องเรียน:</strong> ให้นักศึกษาแต่ละกลุ่มช่วยกันตั้งชื่อแต่ละคลัสเตอร์ แล้วถามว่า 
+              <em>"ใครเป็นคนบอกโปรแกรมว่ากลุ่มพวกนี้คืออะไร?"</em> (เฉลย: ไม่มีใครบอก เกิดจากการจัดกลุ่มระยะห่างตัวเลขเวกเตอร์ล้วนๆ)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- TAB 5: Corpus Stats -->
+    <section id="pane-stats" class="tab-pane hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+        <div class="border-b border-slate-100 pb-5">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">ส่วนที่ 4</span>
+            <h2 class="text-xl font-bold text-slate-800">ปิดท้าย: ทำไมโลกจริงไม่เทรนเอง?</h2>
+          </div>
+          <p class="text-sm text-slate-500 mt-1 content-font">เปรียบเทียบขนาดคลังข้อมูล Wongnai กับคลังระดับโลก และความเข้าใจเรื่อง Transfer Learning</p>
+        </div>
+
+        <div class="mt-6 overflow-hidden border border-slate-200 rounded-xl shadow-xs">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold">
+                <th class="py-3.5 px-4">คลังข้อมูล</th>
+                <th class="py-3.5 px-4">ขนาดโดยประมาณ</th>
+                <th class="py-3.5 px-4">สัดส่วนเปรียบเทียบ</th>
+                <th class="py-3.5 px-4">ความเหมาะสม</th>
+              </tr>
+            </thead>
+            <tbody id="corpusStatsTable" class="divide-y divide-slate-200 bg-white"></tbody>
+          </table>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-5 rounded-xl bg-indigo-50/70 border border-indigo-100">
+            <div class="text-indigo-600 text-2xl font-bold mb-2">20,000x</div>
+            <h4 class="font-bold text-slate-800 text-sm">เล็กกว่าแต่เฉพาะทาง</h4>
+            <p class="text-xs text-slate-600 mt-1 content-font leading-relaxed">แม้คลังของเราจะเล็กกว่าของ Google ราว 20,000 เท่า แต่แม่นยำสูงมากสำหรับรีวิวอาหารเพราะเป็นคลังเฉพาะโดเมน</p>
+          </div>
+          <div class="p-5 rounded-xl bg-emerald-50/70 border border-emerald-100">
+            <div class="text-emerald-600 text-2xl font-bold mb-2">Domain Data</div>
+            <h4 class="font-bold text-slate-800 text-sm">คุณภาพ > ปริมาณทั่วไป</h4>
+            <p class="text-xs text-slate-600 mt-1 content-font leading-relaxed">ข้อมูลเฉพาะทางจำนวนพอเหมาะ มักให้ผลลัพธ์ดีกว่าข้อมูลทั่วไปมหาศาลหากเราต้องการแก้ปัญหาในขอบเขตเฉพาะ</p>
+          </div>
+          <div class="p-5 rounded-xl bg-purple-50/70 border border-purple-100">
+            <div class="text-purple-600 text-2xl font-bold mb-2">Transfer Learning</div>
+            <h4 class="font-bold text-slate-800 text-sm">การต่อยอดโมเดล</h4>
+            <p class="text-xs text-slate-600 mt-1 content-font leading-relaxed">งานจริงนิยมใช้โมเดล Pre-trained ภาษาไทย เช่น Thai2Vec, WangchanBERTa แล้วนำมา Fine-tune ต่อยอดกับงานตัวเอง</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: Lesson Guide -->
+    <section id="pane-lesson" class="tab-pane hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+        <div class="border-b border-slate-100 pb-5">
+          <h2 class="text-xl font-bold text-slate-800">คู่มือแผนการสอน 90 นาที & การเชื่อมต่อ AI Studio</h2>
+          <p class="text-sm text-slate-500 mt-1 content-font">สรุปไทม์ไลน์การสอนในห้องเรียน และขั้นตอนนำเข้าไฟล์ <code>output/word_vectors.csv</code> ไปยัง RapidMiner / AI Studio</p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+          <div class="md:col-span-7 space-y-4">
+            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+              <i class="fa-solid fa-clock text-indigo-600"></i> ลำดับเวลาการสอน (Timeline)
+            </h3>
+            <div class="space-y-3 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-slate-200 pl-8">
+              <div class="relative">
+                <div class="absolute -left-8 top-1 w-7 h-7 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">1</div>
+                <div class="font-semibold text-sm text-slate-800">ช่วงที่ 1: ตั้งคำถาม (10 นาที)</div>
+                <div class="text-xs text-slate-600 content-font">เขียนกระดาน "คอมพิวเตอร์รู้ไหมว่า 'อร่อย' กับ 'แซ่บ' ใกล้กัน" ให้แต่ละกลุ่มทาย 5 คำ</div>
+              </div>
+              <div class="relative">
+                <div class="absolute -left-8 top-1 w-7 h-7 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">2</div>
+                <div class="font-semibold text-sm text-slate-800">ช่วงที่ 2: เฉลยด้วยโปรแกรม (15 นาที)</div>
+                <div class="text-xs text-slate-600 content-font">เปิดเมนู 1 ค้นหา "อร่อย" ชี้ให้เห็นคำสะกดผิดที่ปนมา อธิบาย Distributional Hypothesis</div>
+              </div>
+              <div class="relative">
+                <div class="absolute -left-8 top-1 w-7 h-7 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">3</div>
+                <div class="font-semibold text-sm text-slate-800">ช่วงที่ 3: เปลี่ยนคำสด ๆ (15 นาที)</div>
+                <div class="text-xs text-slate-600 content-font">ให้นักศึกษาเสนอคำ (ส้มตำ, กาแฟ, บริการ, ราคา) สังเกตการออกเป็นหมวดหมู่</div>
+              </div>
+              <div class="relative">
+                <div class="absolute -left-8 top-1 w-7 h-7 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">4</div>
+                <div class="font-semibold text-sm text-slate-800">ช่วงที่ 4: ข้อจำกัดของโมเดล (15 นาที)</div>
+                <div class="text-xs text-slate-600 content-font">เปิดเมนู 2 ทำไม 'แพง' กับ 'ถูก' คล้ายกัน 0.77 เตือนเรื่อง Sentiment Analysis</div>
+              </div>
+              <div class="relative">
+                <div class="absolute -left-8 top-1 w-7 h-7 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">5</div>
+                <div class="font-semibold text-sm text-slate-800">ช่วงที่ 5: จากคำสู่เอกสาร (20 นาที)</div>
+                <div class="text-xs text-slate-600 content-font">เปิดเมนู 3 สุ่มรีวิว ค้นหา 5 รีวิวที่คล้ายกัน อธิบาย Average Vector และเชื่อมโยง Netflix/Shopee/RAG</div>
+              </div>
+              <div class="relative">
+                <div class="absolute -left-8 top-1 w-7 h-7 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">6</div>
+                <div class="font-semibold text-sm text-slate-800">ช่วงที่ 6: กิจกรรมกลุ่ม k-Means (15 นาที)</div>
+                <div class="text-xs text-slate-600 content-font">เปิดเมนู 4 ให้นักศึกษาช่วยกันตั้งชื่อคลัสเตอร์ ปิดท้ายด้วยข้อสรุปเรื่องตัวเลขเวกเตอร์</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="md:col-span-5 bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3">
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+              <i class="fa-solid fa-diagram-project text-purple-600"></i> การต่อเข้า AI Studio / RapidMiner
+            </h3>
+            <ol class="text-xs text-slate-600 space-y-2 content-font list-decimal list-inside leading-relaxed">
+              <li>ใช้ Operator <strong>Read CSV</strong> อ่านไฟล์ <code>output/word_vectors.csv</code></li>
+              <li>ตั้งค่า <code>encoding = UTF-8</code></li>
+              <li>ไฟล์มี ~9,000 แถว ไม่เกินเพดาน 10,000 แถวของรุ่น Free</li>
+              <li>ต่อ Operator <strong>Set Role</strong> กำหนดให้ <code>word</code> มีบทบาทเป็น <code>id</code></li>
+              <li>ใช้งาน Operator ต่อยอดได้ทันที:
+                <ul class="list-disc list-inside pl-3 mt-1 text-slate-700">
+                  <li><strong>Cross Distances</strong> (CosineSimilarity)</li>
+                  <li><strong>k-Means</strong> สำหรับจัดกลุ่ม</li>
+                  <li><strong>PCA → Visualizations</strong> วาดแผนที่ 2 มิติ</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <p>Thai Word Embedding Demo and Classroom Keys — Vercel Deployable</p>
+  </footer>
+  <script>
+    let similarChartInstance = null;
+    let pcaChartInstance = null;
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'text-indigo-800', 'shadow-sm', 'font-semibold');
+        btn.classList.add('text-indigo-100');
+      });
+
+      const pane = document.getElementById('pane-' + tabId);
+      const btn = document.getElementById('tab-btn-' + tabId);
+      if (pane) pane.classList.remove('hidden');
+      if (btn) {
+        btn.classList.add('bg-white', 'text-indigo-800', 'shadow-sm', 'font-semibold');
+        btn.classList.remove('text-indigo-100');
+      }
+
+      if (tabId === 'limitations') loadLimitations();
+      if (tabId === 'docsearch') queryDocSearch(0, false);
+      if (tabId === 'clusters') loadClusters();
+      if (tabId === 'stats') loadCorpusStats();
+    }
+
+    async function querySimilar(word) {
+      document.getElementById('similarInput').value = word;
+      document.getElementById('similarLoading').classList.remove('hidden');
+      document.getElementById('similarResultContainer').classList.add('opacity-50');
+
+      try {
+        const res = await fetch(`/api/similar?word=${encodeURIComponent(word)}`);
+        const data = await res.json();
+        renderSimilarResults(data);
+      } catch (err) {
+        console.error('Error fetching similar words:', err);
+      } finally {
+        document.getElementById('similarLoading').classList.add('hidden');
+        document.getElementById('similarResultContainer').classList.remove('opacity-50');
+      }
+    }
+
+    function handleSimilarSubmit(e) {
+      e.preventDefault();
+      const val = document.getElementById('similarInput').value.trim();
+      if (val) querySimilar(val);
+    }
+
+    function renderSimilarResults(data) {
+      const container = document.getElementById('similarTableBody');
+      const badge = document.getElementById('currentQueryBadge');
+      badge.textContent = `คำค้น: ${data.query || 'อร่อย'}`;
+      container.innerHTML = '';
+
+      if (data.error) {
+        container.innerHTML = `<div class="p-4 text-center text-rose-600 bg-rose-50 rounded-lg text-sm">${data.error}</div>`;
+        return;
+      }
+
+      const results = data.results || [];
+      const labels = [];
+      const scores = [];
+
+      results.forEach((item, index) => {
+        labels.push(item.word);
+        scores.push(item.score);
+
+        const pct = Math.round(item.score * 100);
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-100 hover:border-indigo-200 transition text-sm';
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-5 text-xs text-slate-400 font-bold">${index + 1}</span>
+            <span class="font-medium text-slate-800">${item.word}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-24 bg-slate-100 rounded-full h-2 overflow-hidden hidden sm:block">
+              <div class="bg-indigo-600 h-2 rounded-full" style="width: ${pct}%"></div>
+            </div>
+            <span class="font-mono text-xs text-indigo-600 font-semibold">${item.score.toFixed(4)}</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      const misBox = document.getElementById('misspellingBox');
+      const misList = document.getElementById('misspellingList');
+      if (data.misspelling_info && data.misspelling_info.misspellings && data.misspelling_info.misspellings.length > 0) {
+        misBox.classList.remove('hidden');
+        misList.innerHTML = '';
+        data.misspelling_info.misspellings.forEach(m => {
+          misList.innerHTML += `
+            <span class="bg-white/80 border border-amber-300 text-amber-900 px-2.5 py-1 rounded-md text-xs font-medium">
+              ${m.word} (sim: ${m.score})
+            </span>
+          `;
+        });
+      } else {
+        misBox.classList.add('hidden');
+      }
+
+      renderSimilarChart(labels, scores);
+    }
+
+    function renderSimilarChart(labels, dataScores) {
+      const ctx = document.getElementById('similarChart').getContext('2d');
+      if (similarChartInstance) similarChartInstance.destroy();
+
+      similarChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Cosine Similarity',
+            data: dataScores,
+            backgroundColor: 'rgba(99, 102, 241, 0.85)',
+            hoverBackgroundColor: 'rgba(79, 70, 229, 1)',
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { min: 0, max: 1, ticks: { font: { family: 'Prompt' } } },
+            y: { ticks: { font: { family: 'Prompt', size: 12 } } }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` ความคล้าย: ${ctx.parsed.x.toFixed(4)}`
+              }
+            }
+          }
+        }
+      });
+    }
+
+    async function loadLimitations() {
+      try {
+        const res = await fetch('/api/limitations');
+        const data = await res.json();
+        const container = document.getElementById('limitationsTable');
+        container.innerHTML = '';
+
+        data.pairs.forEach(p => {
+          const pct = Math.round(p.similarity * 100);
+          const card = document.createElement('div');
+          card.className = 'bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs flex flex-col gap-2';
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 font-bold text-slate-800">
+                <span class="text-indigo-600">${p.word1}</span>
+                <span class="text-slate-400">↔</span>
+                <span class="text-rose-600">${p.word2}</span>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${p.is_high_similarity ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
+                Sim: ${p.similarity.toFixed(4)}
+              </span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div class="bg-amber-500 h-2 rounded-full" style="width: ${pct}%"></div>
+            </div>
+            <div class="text-xs text-slate-500 flex justify-between content-font">
+              <span>บริบทตัวอย่าง: ${p.context_template}</span>
+              <span class="text-slate-400 font-medium">${p.semantic_relation}</span>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function queryDocSearch(idx = null, randomPick = false) {
+      try {
+        const url = randomPick ? '/api/doc_search?random_pick=true' : `/api/doc_search?idx=${idx || 0}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const target = data.target_review;
+        document.getElementById('targetReviewText').textContent = `"${target.text}"`;
+        document.getElementById('targetRatingStars').textContent = '★'.repeat(target.rating) + '☆'.repeat(5 - target.rating);
+
+        const list = document.getElementById('similarReviewsList');
+        list.innerHTML = '';
+
+        data.similar_reviews.forEach((r, idx) => {
+          const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+          const card = document.createElement('div');
+          card.className = 'bg-white p-4 rounded-xl border border-slate-200 shadow-xs hover:border-cyan-300 transition flex flex-col md:flex-row md:items-center justify-between gap-3';
+          card.innerHTML = `
+            <div class="space-y-1 content-font flex-grow">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded bg-cyan-50 text-cyan-700 border border-cyan-200">อันดับ ${idx + 1}</span>
+                <span class="text-yellow-400 text-xs">${stars}</span>
+              </div>
+              <p class="text-sm text-slate-700 leading-relaxed">"${r.text}"</p>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <span class="text-xs text-slate-400 block">Cosine Similarity</span>
+              <span class="font-mono text-sm font-bold text-cyan-600">${r.score.toFixed(4)}</span>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadClusters() {
+      try {
+        const res = await fetch('/api/clusters');
+        const data = await res.json();
+        const container = document.getElementById('clustersContainer');
+        container.innerHTML = '';
+
+        const datasets = [];
+        const colors = [
+          '#6366f1', '#ec4899', '#06b6d4', '#10b981',
+          '#f59e0b', '#8b5cf6', '#ef4444', '#14b8a6'
+        ];
+
+        data.clusters.forEach((c, idx) => {
+          const color = colors[idx % colors.length];
+          const wordsList = c.words.map(w => w.word).join(', ');
+
+          const card = document.createElement('div');
+          card.className = 'bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5';
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 font-bold text-sm text-slate-800">
+                <span class="w-3 h-3 rounded-full" style="background-color: ${color}"></span>
+                <span>${c.cluster_name}</span>
+              </div>
+              <span class="text-xs text-slate-400">${c.words.length} คำ</span>
+            </div>
+            <p class="text-xs text-slate-600 content-font leading-relaxed">${wordsList}</p>
+          `;
+          container.appendChild(card);
+
+          datasets.push({
+            label: c.cluster_name,
+            data: c.words.map(w => ({ x: w.x, y: w.y, word: w.word })),
+            backgroundColor: color,
+            borderColor: color,
+            pointRadius: 5,
+            pointHoverRadius: 8
+          });
+        });
+
+        renderPCAChart(datasets);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderPCAChart(datasets) {
+      const ctx = document.getElementById('pcaChart').getContext('2d');
+      if (pcaChartInstance) pcaChartInstance.destroy();
+
+      pcaChartInstance = new Chart(ctx, {
+        type: 'scatter',
+        data: { datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` ${ctx.raw.word} (${ctx.raw.x.toFixed(2)}, ${ctx.raw.y.toFixed(2)})`
+              }
+            }
+          },
+          scales: {
+            x: { grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Prompt' } } },
+            y: { grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Prompt' } } }
+          }
+        }
+      });
+    }
+
+    async function loadCorpusStats() {
+      try {
+        const res = await fetch('/api/corpus_stats');
+        const data = await res.json();
+        const tbody = document.getElementById('corpusStatsTable');
+        tbody.innerHTML = '';
+
+        data.table.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.className = row.highlight ? 'bg-indigo-50/60 font-semibold' : 'hover:bg-slate-50';
+          tr.innerHTML = `
+            <td class="py-3 px-4 text-slate-900">${row.corpus}</td>
+            <td class="py-3 px-4 text-slate-700 font-mono">${row.size}</td>
+            <td class="py-3 px-4 text-indigo-700">${row.ratio}</td>
+            <td class="py-3 px-4 text-xs text-slate-500">${row.highlight ? '✅ ดีเยี่ยมสำหรับอาหารไทย' : 'เหมาะสำหรับงานทั่วไป'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      querySimilar('อร่อย');
+    });
+  </script>
+</body>
+</html>
