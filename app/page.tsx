@@ -117,7 +117,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080811] text-white flex flex-col w-full max-w-5xl mx-auto relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#080811] text-white flex flex-col w-full relative overflow-x-hidden">
 
       {/* Ambient glows */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -127,7 +127,8 @@ export default function HomePage() {
       </div>
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-30 bg-[#080811]/85 backdrop-blur-2xl border-b border-white/5 px-4 pt-10 pb-3">
+      <header className="sticky top-0 z-30 bg-[#080811]/85 backdrop-blur-2xl border-b border-white/5 px-4 pt-6 pb-3">
+        <div className="max-w-6xl mx-auto w-full">
         {/* Brand */}
         <div className="flex items-center gap-2.5 mb-4">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center shadow-lg shadow-violet-500/40">
@@ -140,7 +141,7 @@ export default function HomePage() {
         </div>
 
         {/* Search Input */}
-        <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }}>
+        <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="max-w-3xl">
           <div className={`flex items-center gap-2 rounded-2xl px-3.5 py-2.5 border transition-all ${
             isListening
               ? "bg-rose-500/10 border-rose-500/50 shadow-lg shadow-rose-500/15"
@@ -190,10 +191,12 @@ export default function HomePage() {
             </button>
           ))}
         </div>
+      </div>
       </header>
 
       {/* ── MAIN ── */}
-      <main className="flex-1 px-4 py-4 pb-28 relative z-10">
+      <main className="flex-1 px-4 py-6 pb-28 relative z-10">
+        <div className="max-w-6xl mx-auto w-full">
 
         {/* EMPTY STATE */}
         {!hasSearched && (
@@ -267,7 +270,7 @@ export default function HomePage() {
 
             {/* SONG CARDS */}
             {activeView === "songs" && !isLoading && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-6">
                 {matchedSongs.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-4xl mb-3">🔍</p>
@@ -421,7 +424,7 @@ export default function HomePage() {
 
             {/* WORD RESULTS */}
             {activeView === "words" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 pb-6">
                 <p className="text-[10px] text-slate-600 px-1 pb-1">คำที่มีความหมายใกล้เคียงกัน (Word Embedding)</p>
                 {similarWords.length === 0 ? (
                   <div className="text-center py-12">
@@ -456,6 +459,7 @@ export default function HomePage() {
             )}
           </div>
         )}
+      </div>
       </main>
 
       {/* ── BOTTOM NAV ── */}
