@@ -127,21 +127,21 @@ export default function HomePage() {
       </div>
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-30 bg-[#080811]/85 backdrop-blur-2xl border-b border-white/5 px-4 pt-6 pb-3">
-        <div className="max-w-6xl mx-auto w-full">
+      <header className="sticky top-0 z-30 bg-[#080811]/85 backdrop-blur-2xl border-b border-white/5 px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 md:pt-10 pb-4">
+        <div className="max-w-4xl mx-auto w-full flex flex-col items-center">
         {/* Brand */}
-        <div className="flex items-center gap-2.5 mb-4">
+        <div className="flex items-center justify-center gap-2.5 mb-4">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center shadow-lg shadow-violet-500/40">
             <Music size={16} className="text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-bold text-white leading-tight">Thai Song Finder</h1>
-            <p className="text-[10px] text-slate-500">ค้นหาจากเนื้อเพลง • พูดก็ได้</p>
+            <h1 className="text-[clamp(1rem,3vw,1.25rem)] font-bold text-white leading-tight">Thai Song Finder</h1>
+            <p className="text-[clamp(0.65rem,2vw,0.85rem)] text-slate-500">ค้นหาจากเนื้อเพลง • พูดก็ได้</p>
           </div>
         </div>
 
         {/* Search Input */}
-        <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="max-w-3xl">
+        <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="w-full">
           <div className={`flex items-center gap-2 rounded-2xl px-3.5 py-2.5 border transition-all ${
             isListening
               ? "bg-rose-500/10 border-rose-500/50 shadow-lg shadow-rose-500/15"
@@ -154,7 +154,7 @@ export default function HomePage() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="พิมพ์ท่อนเพลงที่จำได้..."
               readOnly={isListening}
-              className="flex-1 bg-transparent text-sm text-white placeholder-slate-600 outline-none"
+              className="flex-1 bg-transparent text-[clamp(1rem,2vw,1.125rem)] text-white placeholder-slate-600 outline-none w-full"
             />
             <button
               type="button"
@@ -179,12 +179,12 @@ export default function HomePage() {
         </form>
 
         {/* Quick Pills */}
-        <div className="flex gap-1.5 mt-2.5 overflow-x-auto pb-0.5" style={{ scrollbarWidth: "none" }}>
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-2.5 mt-4 pb-1">
           {SAMPLE_QUERIES.map((p) => (
             <button
               key={p.value}
               onClick={() => { setQuery(p.value); doSearch(p.value); }}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/[0.05] border border-white/8 text-[11px] text-slate-400 whitespace-nowrap hover:bg-violet-500/20 hover:border-violet-500/40 hover:text-white active:scale-95 transition-all flex-shrink-0"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/[0.05] border border-white/8 text-[clamp(0.7rem,1.5vw,0.85rem)] text-slate-400 whitespace-nowrap hover:bg-violet-500/20 hover:border-violet-500/40 hover:text-white active:scale-95 transition-all flex-shrink-0"
             >
               <span className="text-base leading-none">{p.emoji}</span>
               <span>{p.label}</span>
@@ -195,7 +195,7 @@ export default function HomePage() {
       </header>
 
       {/* ── MAIN ── */}
-      <main className="flex-1 px-4 py-6 pb-28 relative z-10">
+      <main className="flex-1 px-4 sm:px-6 md:px-8 py-6 sm:py-8 pb-28 md:pb-12 relative z-10">
         <div className="max-w-6xl mx-auto w-full">
 
         {/* EMPTY STATE */}
@@ -205,13 +205,13 @@ export default function HomePage() {
               <Wand2 size={28} className="text-violet-400" />
             </div>
             <div>
-              <p className="text-base font-bold text-white">ค้นหาเพลงด้วยเนื้อเพลง</p>
-              <p className="text-slate-400 text-xs mt-1.5 leading-relaxed max-w-[260px]">
+              <p className="text-[clamp(1rem,3vw,1.25rem)] font-bold text-white">ค้นหาเพลงด้วยเนื้อเพลง</p>
+              <p className="text-slate-400 text-[clamp(0.75rem,2vw,0.875rem)] mt-1.5 leading-relaxed max-w-[85%] sm:max-w-sm mx-auto">
                 พิมพ์ท่อนที่จำได้ หรือกดไมค์ร้องเพลง<br />
                 แม้จำผิดหรือสะกดผิด ก็หาเจอ!
               </p>
             </div>
-            <div className="flex flex-col gap-2 w-full max-w-[300px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full max-w-3xl mt-4">
               {SAMPLE_QUERIES.slice(0, 4).map((q) => (
                 <button
                   key={q.value}
@@ -220,8 +220,8 @@ export default function HomePage() {
                 >
                   <span className="text-xl">{q.emoji}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-white">{q.label}</p>
-                    <p className="text-[11px] text-slate-500 truncate">{q.value}</p>
+                    <p className="text-[clamp(0.875rem,2vw,1rem)] font-semibold text-white">{q.label}</p>
+                    <p className="text-[clamp(0.65rem,1.5vw,0.8rem)] text-slate-500 truncate">{q.value}</p>
                   </div>
                   <ChevronRight size={13} className="text-slate-600 flex-shrink-0" />
                 </button>
@@ -239,7 +239,7 @@ export default function HomePage() {
                 <button
                   key={tab}
                   onClick={() => setActiveView(tab)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[clamp(0.75rem,2vw,0.875rem)] font-semibold transition-all ${
                     activeView === tab
                       ? "bg-gradient-to-r from-violet-600 to-pink-600 text-white shadow-md"
                       : "text-slate-500 hover:text-slate-300"
@@ -252,7 +252,7 @@ export default function HomePage() {
 
             {/* Loading Skeletons */}
             {isLoading && activeView === "songs" && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pb-6">
                 {[0, 1, 2].map((i) => (
                   <div key={i} className="rounded-2xl bg-white/[0.04] border border-white/5 p-4 animate-pulse">
                     <div className="flex gap-3">
@@ -270,7 +270,7 @@ export default function HomePage() {
 
             {/* SONG CARDS */}
             {activeView === "songs" && !isLoading && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pb-6">
                 {matchedSongs.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-4xl mb-3">🔍</p>
@@ -311,7 +311,7 @@ export default function HomePage() {
                               )}
                               {!isTop && (
                                 <div className="absolute -top-1 -left-1 w-4.5 h-4.5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center">
-                                  <span className="text-[8px] font-bold text-slate-400">{idx + 1}</span>
+                                  <span className="text-[clamp(0.55rem,1.2vw,0.7rem)] font-bold text-slate-400">{idx + 1}</span>
                                 </div>
                               )}
                             </div>
@@ -366,7 +366,7 @@ export default function HomePage() {
                           {isTop && (
                             <div className="flex gap-2 mt-3">
                               <a href={song.youtubeUrl} target="_blank" rel="noreferrer"
-                                className="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl bg-red-600/12 border border-red-500/20 text-red-400 text-[11px] font-medium hover:bg-red-600/20 active:scale-95 transition-all">
+                                className="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl bg-red-600/12 border border-red-500/20 text-red-400 text-[clamp(0.7rem,2vw,0.9rem)] font-medium hover:bg-red-600/20 active:scale-95 transition-all">
                                 <ExternalLink size={11} /> YouTube
                               </a>
                               <a href={song.spotifyUrl} target="_blank" rel="noreferrer"
@@ -424,8 +424,8 @@ export default function HomePage() {
 
             {/* WORD RESULTS */}
             {activeView === "words" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 pb-6">
-                <p className="text-[10px] text-slate-600 px-1 pb-1">คำที่มีความหมายใกล้เคียงกัน (Word Embedding)</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 pb-6">
+                <p className="text-[clamp(0.65rem,1.5vw,0.85rem)] text-slate-600 px-1 pb-1">คำที่มีความหมายใกล้เคียงกัน (Word Embedding)</p>
                 {similarWords.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-3xl mb-2">🔤</p>
