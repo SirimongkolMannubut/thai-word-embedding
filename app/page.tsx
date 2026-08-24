@@ -117,7 +117,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080811] text-white flex flex-col max-w-md mx-auto relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#080811] text-white flex flex-col w-full max-w-5xl mx-auto relative overflow-x-hidden">
 
       {/* Ambient glows */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -249,7 +249,7 @@ export default function HomePage() {
 
             {/* Loading Skeletons */}
             {isLoading && activeView === "songs" && (
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6">
                 {[0, 1, 2].map((i) => (
                   <div key={i} className="rounded-2xl bg-white/[0.04] border border-white/5 p-4 animate-pulse">
                     <div className="flex gap-3">
@@ -267,7 +267,7 @@ export default function HomePage() {
 
             {/* SONG CARDS */}
             {activeView === "songs" && !isLoading && (
-              <div className="space-y-2.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pb-6">
                 {matchedSongs.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-4xl mb-3">🔍</p>
@@ -421,7 +421,7 @@ export default function HomePage() {
 
             {/* WORD RESULTS */}
             {activeView === "words" && (
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pb-6">
                 <p className="text-[10px] text-slate-600 px-1 pb-1">คำที่มีความหมายใกล้เคียงกัน (Word Embedding)</p>
                 {similarWords.length === 0 ? (
                   <div className="text-center py-12">
@@ -459,7 +459,7 @@ export default function HomePage() {
       </main>
 
       {/* ── BOTTOM NAV ── */}
-      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-30 border-t border-white/5 bg-[#080811]/90 backdrop-blur-2xl px-8 py-3 safe-area-bottom">
+      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-30 md:hidden border-t border-white/5 bg-[#080811]/90 backdrop-blur-2xl px-8 py-3 safe-area-bottom">
         <div className="flex items-center justify-around">
           <button
             onClick={() => setActiveView("songs")}
