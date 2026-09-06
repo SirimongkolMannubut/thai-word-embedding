@@ -121,9 +121,9 @@ export default function HomePage() {
 
       {/* Ambient glows */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-purple-600/20 blur-3xl" />
-        <div className="absolute top-1/3 right-[-60px] w-48 h-48 rounded-full bg-pink-600/12 blur-3xl" />
-        <div className="absolute bottom-1/4 left-[-40px] w-40 h-40 rounded-full bg-indigo-600/12 blur-3xl" />
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-violet-600/20 blur-[120px] mix-blend-screen" />
+        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] rounded-full bg-fuchsia-600/15 blur-[120px] mix-blend-screen" />
+        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px] mix-blend-screen" />
       </div>
 
       {/* ── HEADER ── */}
@@ -135,19 +135,21 @@ export default function HomePage() {
             <Music size={16} className="text-white" />
           </div>
           <div>
-            <h1 className="text-[clamp(1rem,3vw,1.25rem)] font-bold text-white leading-tight">Thai Song Finder</h1>
+            <h1 className="text-[clamp(1.25rem,4vw,1.5rem)] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-400 leading-tight tracking-tight">Thai Song Finder</h1>
             <p className="text-[clamp(0.65rem,2vw,0.85rem)] text-slate-500">ค้นหาจากเนื้อเพลง • พูดก็ได้</p>
           </div>
         </div>
 
         {/* Search Input */}
-        <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="w-full">
-          <div className={`flex items-center gap-2 rounded-2xl px-3.5 py-2.5 border transition-all ${
+        <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="w-full relative group">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500/0 via-violet-500/20 to-fuchsia-500/0 rounded-2xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+          <div className="relative">
+          <div className={`flex items-center gap-3 rounded-2xl px-4 py-3 sm:py-3.5 border transition-all ${
             isListening
               ? "bg-rose-500/10 border-rose-500/50 shadow-lg shadow-rose-500/15"
               : "bg-white/[0.03] border-white/10 shadow-inner hover:bg-white/[0.06] focus-within:ring-2 focus-within:ring-violet-500/30 focus-within:border-violet-500/60 focus-within:bg-violet-500/[0.04] backdrop-blur-md"
           }`}>
-            <Search size={15} className="text-slate-500 flex-shrink-0" />
+            <Search size={18} className="text-slate-500 flex-shrink-0" />
             <input
               type="text"
               value={isListening ? "🎙️  กำลังฟังเสียง..." : query}
@@ -176,6 +178,7 @@ export default function HomePage() {
               }
             </button>
           </div>
+        </div>
         </form>
 
         {/* Quick Pills */}
@@ -201,27 +204,27 @@ export default function HomePage() {
         {/* EMPTY STATE */}
         {!hasSearched && (
           <div className="flex flex-col items-center text-center py-12 gap-5">
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-violet-500/10 to-pink-500/10 border border-white/10 shadow-[0_0_30px_rgb(139,92,246,0.15)] ring-1 ring-inset ring-white/5 flex items-center justify-center">
-              <Wand2 size={28} className="text-violet-400" />
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgb(139,92,246,0.2)] ring-1 ring-inset ring-white/10 flex items-center justify-center relative overflow-hidden"><div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-50"></div><div className="relative">
+              <Wand2 size={36} className="text-violet-300 drop-shadow-[0_0_15px_rgba(167,139,250,0.5)]" /></div>
             </div>
             <div>
-              <p className="text-[clamp(1rem,3vw,1.25rem)] font-bold text-white">ค้นหาเพลงด้วยเนื้อเพลง</p>
+              <p className="text-[clamp(1.5rem,4vw,2rem)] font-extrabold text-white tracking-tight">ค้นหาเพลงด้วยเนื้อเพลง</p>
               <p className="text-slate-400 text-[clamp(0.75rem,2vw,0.875rem)] mt-1.5 leading-relaxed max-w-[85%] sm:max-w-sm mx-auto">
                 พิมพ์ท่อนที่จำได้ หรือกดไมค์ร้องเพลง<br />
                 แม้จำผิดหรือสะกดผิด ก็หาเจอ!
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full max-w-3xl mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 w-full max-w-4xl mt-6">
               {SAMPLE_QUERIES.slice(0, 4).map((q) => (
                 <button
                   key={q.value}
                   onClick={() => { setQuery(q.value); doSearch(q.value); }}
-                  className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-violet-500/30 hover:bg-gradient-to-r hover:from-violet-500/10 hover:to-transparent active:scale-97 transition-all text-left group shadow-lg shadow-black/20 hover:shadow-violet-500/10"
+                  className="flex items-center gap-4 px-5 py-4 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-violet-500/30 hover:bg-white/[0.04] active:scale-95 transition-all text-left group shadow-lg shadow-black/20 hover:shadow-[0_8px_30px_rgb(139,92,246,0.12)] relative overflow-hidden"
                 >
-                  <span className="text-xl">{q.emoji}</span>
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-violet-500/20 transition-colors"><span className="text-2xl drop-shadow-md group-hover:scale-110 transition-transform">{q.emoji}</span></div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[clamp(0.875rem,2vw,1rem)] font-semibold text-white">{q.label}</p>
-                    <p className="text-[clamp(0.65rem,1.5vw,0.8rem)] text-slate-500 truncate">{q.value}</p>
+                    <p className="text-[clamp(1rem,2vw,1.125rem)] font-bold text-white tracking-tight">{q.label}</p>
+                    <p className="text-[clamp(0.75rem,1.5vw,0.875rem)] text-slate-400 line-clamp-1 mt-0.5">{q.value}</p>
                   </div>
                   <ChevronRight size={13} className="text-slate-500 flex-shrink-0 group-hover:translate-x-1 group-hover:text-violet-400 transition-all" />
                 </button>
