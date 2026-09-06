@@ -128,7 +128,7 @@ export default function HomePage() {
 
       {/* ── HEADER ── */}
       <header className="sticky top-0 z-30 bg-[#080811]/85 backdrop-blur-2xl border-b border-white/5 px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 md:pt-10 pb-4">
-        <div className="max-w-4xl mx-auto w-full flex flex-col items-center">
+        <div className="max-w-6xl mx-auto w-full flex flex-col items-center">
         {/* Brand */}
         <div className="flex items-center justify-center gap-2.5 mb-4">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-[0_0_20px_rgb(139,92,246,0.4)] ring-1 ring-white/20">
@@ -141,7 +141,7 @@ export default function HomePage() {
         </div>
 
         {/* Search Input */}
-        <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="w-full relative group">
+        <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="w-full max-w-4xl relative group">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500/0 via-violet-500/20 to-fuchsia-500/0 rounded-2xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
           <div className="relative">
           <div className={`flex items-center gap-3 rounded-2xl px-4 py-3 sm:py-3.5 border transition-all ${
@@ -198,12 +198,12 @@ export default function HomePage() {
       </header>
 
       {/* ── MAIN ── */}
-      <main className="flex-1 px-4 sm:px-6 md:px-8 py-6 sm:py-8 pb-28 md:pb-12 relative z-10">
-        <div className="max-w-6xl mx-auto w-full">
+      <main className="flex-1 flex flex-col px-4 sm:px-6 md:px-8 py-6 sm:py-8 pb-28 md:pb-12 relative z-10">
+        <div className={max-w-6xl mx-auto w-full flex-1 flex flex-col }>
 
         {/* EMPTY STATE */}
         {!hasSearched && (
-          <div className="flex flex-col items-center text-center py-12 gap-5">
+          <div className="flex flex-col items-center text-center gap-6 md:gap-8 py-10 w-full">
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgb(139,92,246,0.2)] ring-1 ring-inset ring-white/10 flex items-center justify-center relative overflow-hidden"><div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-50"></div><div className="relative">
               <Wand2 size={36} className="text-violet-300 drop-shadow-[0_0_15px_rgba(167,139,250,0.5)]" /></div>
             </div>
@@ -214,17 +214,17 @@ export default function HomePage() {
                 แม้จำผิดหรือสะกดผิด ก็หาเจอ!
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 w-full max-w-4xl mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6 w-full max-w-5xl mt-6 md:mt-10">
               {SAMPLE_QUERIES.slice(0, 4).map((q) => (
                 <button
                   key={q.value}
                   onClick={() => { setQuery(q.value); doSearch(q.value); }}
-                  className="flex items-center gap-4 px-5 py-4 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-violet-500/30 hover:bg-white/[0.04] active:scale-95 transition-all text-left group shadow-lg shadow-black/20 hover:shadow-[0_8px_30px_rgb(139,92,246,0.12)] relative overflow-hidden"
+                  className="flex items-center gap-5 px-6 py-6 sm:py-7 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-violet-500/30 hover:bg-white/[0.04] active:scale-95 transition-all text-left group shadow-lg shadow-black/20 hover:shadow-[0_8px_30px_rgb(139,92,246,0.12)] relative overflow-hidden"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-violet-500/20 transition-colors"><span className="text-2xl drop-shadow-md group-hover:scale-110 transition-transform">{q.emoji}</span></div>
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-violet-500/20 transition-colors flex-shrink-0"><span className="text-2xl sm:text-3xl drop-shadow-md group-hover:scale-110 transition-transform">{q.emoji}</span></div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[clamp(1rem,2vw,1.125rem)] font-bold text-white tracking-tight">{q.label}</p>
-                    <p className="text-[clamp(0.75rem,1.5vw,0.875rem)] text-slate-400 line-clamp-1 mt-0.5">{q.value}</p>
+                    <p className="text-[clamp(1.125rem,2.5vw,1.25rem)] font-bold text-white tracking-tight mb-0.5">{q.label}</p>
+                    <p className="text-[clamp(0.85rem,1.5vw,1rem)] text-slate-400 line-clamp-1">{q.value}</p>
                   </div>
                   <ChevronRight size={13} className="text-slate-500 flex-shrink-0 group-hover:translate-x-1 group-hover:text-violet-400 transition-all" />
                 </button>
