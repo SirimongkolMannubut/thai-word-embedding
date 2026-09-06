@@ -1,18 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef } from "react";
 import {
-  Mic,
-  MicOff,
-  Search,
-  Music,
-  Sparkles,
-  ExternalLink,
-  Play,
-  Pause,
-  ChevronRight,
-  Wand2,
-  ListMusic,
+  Mic, MicOff, Search, Music, Sparkles, ExternalLink,
+  Play, Pause, ChevronRight, Wand2, ListMusic, Zap, Globe,
 } from "lucide-react";
 import { findSimilarWords, SimilarWord } from "@/lib/embedding";
 import { ThaiSong } from "@/lib/songs";
@@ -29,9 +20,9 @@ const SAMPLE_QUERIES = [
 ];
 
 const scoreColor = (v: number) =>
-  v >= 0.8 ? "text-emerald-400" : v >= 0.5 ? "text-yellow-400" : "text-slate-400";
+  v >= 0.8 ? "text-emerald-400" : v >= 0.5 ? "text-amber-400" : "text-slate-400";
 const scoreBarColor = (v: number) =>
-  v >= 0.8 ? "bg-emerald-500" : v >= 0.5 ? "bg-yellow-400" : "bg-slate-500";
+  v >= 0.8 ? "bg-emerald-500" : v >= 0.5 ? "bg-amber-400" : "bg-slate-600";
 
 export default function HomePage() {
   const [query, setQuery] = useState("");
@@ -60,9 +51,7 @@ export default function HomePage() {
     rec.onend = () => setIsListening(false);
     rec.onresult = (e: any) => {
       const t = e.results[0][0].transcript;
-      setQuery(t);
-      setIsListening(false);
-      doSearch(t);
+      setQuery(t); setIsListening(false); doSearch(t);
     };
     rec.onerror = (e: any) => {
       if (e?.error === "not-allowed") alert("กรุณาอนุญาตการใช้งานไมโครโฟน");
@@ -74,17 +63,12 @@ export default function HomePage() {
   const doSearch = async (q: string) => {
     const trimmed = q.trim();
     if (!trimmed) return;
-    setIsLoading(true);
-    setHasSearched(true);
+    setIsLoading(true); setHasSearched(true);
     setSimilarWords(findSimilarWords(trimmed, 8));
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`);
-      if (res.ok) {
-        const data = await res.json();
-        setMatchedSongs(data.matchedSongs || []);
-      }
-    } catch { }
-    finally { setIsLoading(false); }
+      if (res.ok) { const data = await res.json(); setMatchedSongs(data.matchedSongs || []); }
+    } catch { } finally { setIsLoading(false); }
   };
 
   const toggleMic = () => {
@@ -103,412 +87,372 @@ export default function HomePage() {
 
   const toggleAudio = (id: string, url?: string) => {
     if (!url) return;
-    if (playingSongId === id) {
-      audioRef.current?.pause();
-      setPlayingSongId(null);
-    } else {
+    if (playingSongId === id) { audioRef.current?.pause(); setPlayingSongId(null); }
+    else {
       audioRef.current?.pause();
       const a = new Audio(url);
       a.onended = () => setPlayingSongId(null);
-      a.play();
-      audioRef.current = a;
-      setPlayingSongId(id);
+      a.play(); audioRef.current = a; setPlayingSongId(id);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#080811] text-white flex flex-col w-full relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#07070f] text-white flex flex-col w-full relative overflow-x-hidden">
 
-      {/* Ambient glows */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-violet-600/20 blur-[120px] mix-blend-screen" />
-        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] rounded-full bg-fuchsia-600/15 blur-[120px] mix-blend-screen" />
-        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px] mix-blend-screen" />
+      {/* AMBIENT GLOWS */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{zIndex: -1}}>
+        <div className="absolute -top-[30%] -left-[15%] w-[60%] h-[60%] rounded-full bg-violet-700/25 blur-[140px]" />
+        <div className="absolute top-[30%] -right-[15%] w-[50%] h-[50%] rounded-full bg-fuchsia-700/18 blur-[140px]" />
+        <div className="absolute -bottom-[20%] left-[25%] w-[55%] h-[55%] rounded-full bg-indigo-700/12 blur-[140px]" />
       </div>
 
-      {/* ── HEADER ── */}
-      <header className="sticky top-0 z-30 bg-[#080811]/85 backdrop-blur-2xl border-b border-white/5 px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 md:pt-10 pb-4">
-        <div className="max-w-[1400px] mx-auto w-full flex flex-col items-center">
-        <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-4 lg:gap-8 mb-4 lg:mb-6">
-          {/* Brand */}
-          <div className="flex items-center justify-center lg:justify-start gap-3 w-full lg:w-[260px] flex-shrink-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-[0_0_20px_rgb(139,92,246,0.4)] ring-1 ring-white/20">
-              <Music size={18} className="text-white" />
+      {/* HEADER */}
+      <header className="sticky top-0 z-30 bg-[#07070f]/80 backdrop-blur-2xl border-b border-white/[0.06]">
+        <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="flex items-center gap-4 lg:gap-8 py-4">
+            {/* Brand */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-violet-500/30 ring-1 ring-white/15">
+                <Music size={17} className="text-white" />
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-[0.95rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-pink-300 leading-none tracking-tight">Thai Song Finder</h1>
+                <p className="text-[0.63rem] text-slate-500 mt-0.5 font-medium">ค้นหาจากเนื้อเพลง • พูดก็ได้</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-[clamp(1.1rem,4vw,1.25rem)] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-400 leading-tight tracking-tight">Thai Song Finder</h1>
-              <p className="text-[clamp(0.6rem,2vw,0.75rem)] text-slate-500">ค้นหาจากเนื้อเพลง • พูดก็ได้</p>
+
+            {/* Search */}
+            <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="flex-1 max-w-3xl mx-auto">
+              <div className={`flex items-center gap-2.5 rounded-2xl px-4 py-2.5 border transition-all duration-300 ${
+                isListening
+                  ? "bg-rose-500/10 border-rose-500/50 shadow-lg shadow-rose-500/10"
+                  : "bg-white/[0.04] border-white/[0.08] hover:border-white/[0.14] focus-within:border-violet-500/50 focus-within:bg-violet-500/[0.05] focus-within:shadow-lg focus-within:shadow-violet-500/10"
+              }`}>
+                <Search size={16} className="text-slate-500 flex-shrink-0" />
+                <input
+                  type="text"
+                  value={isListening ? "🎙️  กำลังฟังเสียง..." : query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="พิมพ์ท่อนเพลงที่จำได้..."
+                  readOnly={isListening}
+                  className="flex-1 bg-transparent text-[0.95rem] text-white placeholder-slate-600 outline-none"
+                />
+                <button type="button" onClick={toggleMic}
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-all active:scale-90 ${
+                    isListening ? "bg-rose-500 shadow-md shadow-rose-500/40 animate-pulse" : "bg-white/[0.06] hover:bg-violet-500/30"
+                  }`}>
+                  {isListening ? <MicOff size={14} className="text-white" /> : <Mic size={14} className="text-violet-300" />}
+                </button>
+                <button type="submit" disabled={isLoading || !query.trim()}
+                  className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0 active:scale-90 disabled:opacity-30 shadow-md shadow-violet-500/30 transition-all">
+                  {isLoading
+                    ? <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    : <ChevronRight size={14} className="text-white" />}
+                </button>
+              </div>
+            </form>
+
+            {/* Right badge */}
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 flex-shrink-0">
+              <Zap size={11} className="text-violet-400" />
+              <span className="text-[0.65rem] font-semibold text-violet-300 hidden lg:block">AI-Powered</span>
             </div>
           </div>
 
-          {/* Search Input */}
-          <form onSubmit={(e) => { e.preventDefault(); doSearch(query); }} className="w-full max-w-4xl flex-1 relative group">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500/0 via-violet-500/20 to-fuchsia-500/0 rounded-2xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-          <div className="relative">
-          <div className={`flex items-center gap-3 rounded-2xl px-4 py-3 sm:py-3.5 border transition-all ${
-            isListening
-              ? "bg-rose-500/10 border-rose-500/50 shadow-lg shadow-rose-500/15"
-              : "bg-white/[0.03] border-white/10 shadow-inner hover:bg-white/[0.06] focus-within:ring-2 focus-within:ring-violet-500/30 focus-within:border-violet-500/60 focus-within:bg-violet-500/[0.04] backdrop-blur-md"
-          }`}>
-            <Search size={18} className="text-slate-500 flex-shrink-0" />
-            <input
-              type="text"
-              value={isListening ? "🎙️  กำลังฟังเสียง..." : query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="พิมพ์ท่อนเพลงที่จำได้..."
-              readOnly={isListening}
-              className="flex-1 bg-transparent text-[clamp(1rem,2vw,1.125rem)] text-white placeholder-slate-600 outline-none w-full"
-            />
-            <button
-              type="button"
-              onClick={toggleMic}
-              className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-all active:scale-90 ${
-                isListening ? "bg-rose-500 animate-pulse" : "bg-white/10 hover:bg-violet-500/40 hover:text-white shadow-sm hover:shadow-violet-500/20"
-              }`}
-            >
-              {isListening ? <MicOff size={14} className="text-white" /> : <Mic size={14} className="text-violet-300" />}
-            </button>
-            <button
-              type="submit"
-              disabled={isLoading || !query.trim()}
-              className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center flex-shrink-0 active:scale-90 disabled:opacity-30 shadow-md shadow-violet-500/30"
-            >
-              {isLoading
-                ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                : <ChevronRight size={14} className="text-white" />
-              }
-            </button>
+          {/* Quick Pills */}
+          <div className="flex flex-wrap gap-2 pb-3">
+            {SAMPLE_QUERIES.map((p) => (
+              <button key={p.value} onClick={() => { setQuery(p.value); doSearch(p.value); }}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.72rem] font-medium text-slate-400 bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.07] hover:border-violet-500/30 hover:text-white transition-all active:scale-95 whitespace-nowrap">
+                <span className="text-sm leading-none">{p.emoji}</span>{p.label}
+              </button>
+            ))}
           </div>
         </div>
-        </form>
-        {/* Spacer for centering search on large screens */}
-        <div className="hidden lg:block lg:w-[260px] flex-shrink-0"></div>
-        </div>
-
-        {/* Quick Pills */}
-        <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-2.5 pb-1 w-full lg:pl-[292px]">
-          {SAMPLE_QUERIES.map((p) => (
-            <button
-              key={p.value}
-              onClick={() => { setQuery(p.value); doSearch(p.value); }}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-[clamp(0.7rem,1.5vw,0.85rem)] text-slate-300 whitespace-nowrap hover:bg-white/[0.08] hover:border-white/20 hover:text-white backdrop-blur-sm hover:shadow-lg active:scale-95 transition-all flex-shrink-0"
-            >
-              <span className="text-base leading-none">{p.emoji}</span>
-              <span>{p.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
       </header>
 
-      {/* ── MAIN ── */}
-      <main className="flex-1 flex flex-col px-4 sm:px-6 md:px-8 py-6 sm:py-8 pb-28 md:pb-12 relative z-10">
+      {/* MAIN */}
+      <main className="flex-1 flex flex-col relative z-10 px-5 sm:px-8 lg:px-12 py-8 pb-28 md:pb-10">
         <div className={`max-w-[1400px] mx-auto w-full flex-1 flex flex-col ${!hasSearched ? "justify-center" : ""}`}>
 
-        {/* EMPTY STATE */}
-        {!hasSearched && (
-          <div className="flex flex-col items-center text-center gap-6 md:gap-8 py-10 w-full">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgb(139,92,246,0.2)] ring-1 ring-inset ring-white/10 flex items-center justify-center relative overflow-hidden"><div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-50"></div><div className="relative">
-              <Wand2 size={36} className="text-violet-300 drop-shadow-[0_0_15px_rgba(167,139,250,0.5)]" /></div>
-            </div>
-            <div>
-              <p className="text-[clamp(1.5rem,4vw,2rem)] font-extrabold text-white tracking-tight">ค้นหาเพลงด้วยเนื้อเพลง</p>
-              <p className="text-slate-400 text-[clamp(0.75rem,2vw,0.875rem)] mt-1.5 leading-relaxed max-w-[85%] sm:max-w-sm mx-auto">
-                พิมพ์ท่อนที่จำได้ หรือกดไมค์ร้องเพลง<br />
-                แม้จำผิดหรือสะกดผิด ก็หาเจอ!
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6 w-full max-w-6xl mt-6 md:mt-10">
-              {SAMPLE_QUERIES.slice(0, 4).map((q) => (
-                <button
-                  key={q.value}
-                  onClick={() => { setQuery(q.value); doSearch(q.value); }}
-                  className="flex items-center gap-5 px-6 py-6 sm:py-7 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-violet-500/30 hover:bg-white/[0.04] active:scale-95 transition-all text-left group shadow-lg shadow-black/20 hover:shadow-[0_8px_30px_rgb(139,92,246,0.12)] relative overflow-hidden"
-                >
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-violet-500/20 transition-colors flex-shrink-0"><span className="text-2xl sm:text-3xl drop-shadow-md group-hover:scale-110 transition-transform">{q.emoji}</span></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[clamp(1.125rem,2.5vw,1.25rem)] font-bold text-white tracking-tight mb-0.5">{q.label}</p>
-                    <p className="text-[clamp(0.85rem,1.5vw,1rem)] text-slate-400 line-clamp-1">{q.value}</p>
-                  </div>
-                  <ChevronRight size={13} className="text-slate-500 flex-shrink-0 group-hover:translate-x-1 group-hover:text-violet-400 transition-all" />
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+          {/* HERO / EMPTY STATE */}
+          {!hasSearched && (
+            <div className="flex flex-col items-center text-center py-12 gap-8">
+              {/* Icon */}
+              <div className="relative">
+                <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500/25 to-fuchsia-500/25 border border-white/10 flex items-center justify-center shadow-[0_0_50px_rgba(139,92,246,0.2)] ring-1 ring-inset ring-white/10 backdrop-blur-sm">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-white/10 to-transparent" />
+                  <Wand2 size={38} className="text-violet-300 relative z-10 drop-shadow-[0_0_12px_rgba(196,181,253,0.6)]" />
+                </div>
+                <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-30"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-violet-400"></span>
+                </span>
+              </div>
 
-        {/* RESULTS */}
-        {hasSearched && (
-          <div className="space-y-3">
-            {/* Tab Switcher */}
-            <div className="flex gap-1 p-1 rounded-2xl bg-white/[0.04] border border-white/8">
-              {(["songs", "words"] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveView(tab)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[clamp(0.75rem,2vw,0.875rem)] font-semibold transition-all ${
-                    activeView === tab
-                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-[0_4px_12px_rgb(139,92,246,0.3)] ring-1 ring-white/20"
-                      : "text-slate-500 hover:text-slate-300"
-                  }`}
-                >
-                  {tab === "songs" ? <><ListMusic size={13} /> เพลง {matchedSongs.length > 0 && `(${matchedSongs.length})`}</> : <><Sparkles size={13} /> คำใกล้เคียง</>}
-                </button>
-              ))}
-            </div>
+              <div className="max-w-2xl">
+                <h2 className="text-[clamp(2rem,5vw,2.8rem)] font-extrabold text-white tracking-tight leading-[1.1]">
+                  ค้นหาเพลงด้วย
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400"> เนื้อเพลง</span>
+                </h2>
+                <p className="text-slate-400 text-[clamp(0.9rem,2vw,1.05rem)] mt-3 leading-relaxed">
+                  จำท่อนเพลงไม่ครบ สะกดผิดก็ไม่เป็นไร — AI หาให้ได้เสมอ
+                </p>
+              </div>
 
-            {/* Loading Skeletons */}
-            {isLoading && activeView === "songs" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pb-6">
-                {[0, 1, 2].map((i) => (
-                  <div key={i} className="rounded-2xl bg-white/[0.04] border border-white/5 p-4 animate-pulse">
-                    <div className="flex gap-3">
-                      <div className="w-14 h-14 rounded-xl bg-white/8 flex-shrink-0" />
-                      <div className="flex-1 space-y-2 pt-1">
-                        <div className="h-3.5 bg-white/8 rounded-full w-3/4" />
-                        <div className="h-3 bg-white/5 rounded-full w-1/2" />
-                        <div className="h-2.5 bg-white/4 rounded-full w-2/3" />
-                      </div>
-                    </div>
-                  </div>
+              <div className="flex flex-wrap justify-center gap-2.5">
+                {[{ icon: <Mic size={12} />, text: "Voice Search" }, { icon: <Zap size={12} />, text: "AI Matching" }, { icon: <Globe size={12} />, text: "เพลงไทย" }].map((f) => (
+                  <span key={f.text} className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-violet-300 bg-violet-500/10 border border-violet-500/20">
+                    {f.icon}{f.text}
+                  </span>
                 ))}
               </div>
-            )}
 
-            {/* SONG CARDS */}
-            {activeView === "songs" && !isLoading && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pb-6">
-                {matchedSongs.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-4xl mb-3">🔍</p>
-                    <p className="text-slate-400 text-sm">ไม่พบเพลงที่ตรงกัน</p>
-                    <p className="text-slate-600 text-xs mt-1">ลองพิมพ์เนื้อเพลงอื่น หรือกดไมค์ร้องเพลง</p>
-                  </div>
-                ) : (
-                  matchedSongs.map((song, idx) => {
-                    const score = song.score || 0;
-                    const isTop = idx === 0;
-                    const isExpanded = expandedSong === song.id;
-                    const isPlaying = playingSongId === song.id;
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-5xl mt-2">
+                {SAMPLE_QUERIES.slice(0, 4).map((q) => (
+                  <button key={q.value} onClick={() => { setQuery(q.value); doSearch(q.value); }}
+                    className="group flex items-center gap-5 px-6 py-5 rounded-3xl bg-white/[0.02] border border-white/[0.06] hover:border-violet-500/35 hover:bg-white/[0.05] active:scale-[0.98] transition-all duration-300 text-left shadow-md shadow-black/20 hover:shadow-[0_8px_40px_rgba(139,92,246,0.12)] relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-violet-500/0 group-hover:from-violet-500/5 to-transparent transition-all duration-500 rounded-3xl" />
+                    <div className="w-14 h-14 rounded-2xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-violet-500/15 group-hover:border-violet-500/25 transition-all flex-shrink-0">
+                      <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{q.emoji}</span>
+                    </div>
+                    <div className="flex-1 min-w-0 relative z-10">
+                      <p className="text-[1.05rem] font-bold text-white tracking-tight group-hover:text-violet-100 transition-colors">{q.label}</p>
+                      <p className="text-sm text-slate-500 line-clamp-1 mt-0.5">{q.value}</p>
+                    </div>
+                    <ChevronRight size={15} className="text-slate-600 flex-shrink-0 group-hover:translate-x-1 group-hover:text-violet-400 transition-all duration-300 relative z-10" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
-                    return (
-                      <div key={song.id} className={`rounded-2xl border overflow-hidden transition-all duration-500 hover:-translate-y-1 group hover:shadow-2xl hover:shadow-violet-900/20 hover:border-white/20 ${
-                        isTop
-                          ? "bg-gradient-to-br from-violet-900/40 via-purple-900/20 to-black/40 border-violet-500/40 shadow-[0_8px_30px_rgb(139,92,246,0.15)] ring-1 ring-violet-500/20"
-                          : "bg-white/[0.02] border-white/5 hover:bg-white/[0.04]"
+          {/* RESULTS */}
+          {hasSearched && (
+            <div className="space-y-4 pt-2">
+              {/* Tabs */}
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1 p-1 rounded-2xl bg-white/[0.04] border border-white/[0.07]">
+                  {(["songs", "words"] as const).map((tab) => (
+                    <button key={tab} onClick={() => setActiveView(tab)}
+                      className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                        activeView === tab
+                          ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/25 ring-1 ring-white/15"
+                          : "text-slate-500 hover:text-slate-300"
                       }`}>
-                        {/* Top Banner */}
-                        {isTop && (
-                          <div className="px-4 py-1.5 bg-gradient-to-r from-violet-500/15 to-pink-500/10 border-b border-violet-500/15 flex items-center gap-1.5">
-                            <Sparkles size={11} className="text-violet-400" />
-                            <span className="text-[10px] font-semibold text-violet-300 tracking-wide">อันดับ 1 — ตรงที่สุด</span>
-                          </div>
-                        )}
+                      {tab === "songs"
+                        ? <><ListMusic size={14} /> เพลง {matchedSongs.length > 0 && <span className="ml-1 px-1.5 py-0.5 rounded-full bg-white/15 text-[0.58rem] font-bold">{matchedSongs.length}</span>}</>
+                        : <><Sparkles size={14} /> คำใกล้เคียง</>}
+                    </button>
+                  ))}
+                </div>
+                {query && <p className="text-xs text-slate-600 truncate hidden sm:block">ผลสำหรับ "<span className="text-slate-400">{query}</span>"</p>}
+              </div>
 
-                        <div className="p-3.5">
-                          <div className="flex items-start gap-3">
-                            {/* Artwork */}
-                            <div className="relative flex-shrink-0">
-                              {song.artworkUrl ? (
-                                <img src={song.artworkUrl} alt={song.title} className="w-14 h-14 rounded-xl object-cover border border-white/10" />
-                              ) : (
-                                <div className={`w-14 h-14 rounded-xl flex items-center justify-center bg-gradient-to-br ${song.gradient}`}>
-                                  <Music size={20} className="text-white/70" />
-                                </div>
-                              )}
-                              {!isTop && (
-                                <div className="absolute -top-1 -left-1 w-4.5 h-4.5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center">
-                                  <span className="text-[clamp(0.55rem,1.2vw,0.7rem)] font-bold text-slate-400">{idx + 1}</span>
-                                </div>
-                              )}
-                            </div>
+              {/* Loading skeletons */}
+              {isLoading && activeView === "songs" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {[0, 1, 2, 3].map((i) => (
+                    <div key={i} className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-4 animate-pulse">
+                      <div className="flex gap-3">
+                        <div className="w-14 h-14 rounded-xl bg-white/[0.07] flex-shrink-0" />
+                        <div className="flex-1 space-y-2.5 pt-1">
+                          <div className="h-3.5 bg-white/[0.07] rounded-full w-3/4" />
+                          <div className="h-3 bg-white/[0.05] rounded-full w-1/2" />
+                          <div className="h-2.5 bg-white/[0.04] rounded-full w-2/3" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-                            {/* Title/Artist */}
-                            <div className="flex-1 min-w-0 pt-0.5">
-                              <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">{song.title}</h3>
-                              <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">{song.artist}</p>
-                              <span className="inline-block mt-1.5 text-[9px] px-2 py-0.5 rounded-full bg-white/6 text-slate-400 border border-white/6">
-                                {song.moodCategory}
-                              </span>
-                            </div>
-
-                            {/* Score */}
-                            <div className="flex-shrink-0 text-right pl-1">
-                              <div className={`text-xl font-black leading-none ${scoreColor(score)}`}>
-                                {Math.round(score * 100)}
-                              </div>
-                              <div className="text-[9px] text-slate-600">%</div>
-                            </div>
-                          </div>
-
-                          {/* Score Bars */}
-                          {song.detailedScore && (
-                            <div className="mt-3 grid grid-cols-3 gap-x-3 gap-y-1.5">
-                              {[
-                                { label: "เนื้อร้อง", val: song.detailedScore.textMatch },
-                                { label: "เสียง", val: song.detailedScore.phoneticMatch },
-                                { label: "ความหมาย", val: song.detailedScore.semanticMatch },
-                              ].map(({ label, val }) => (
-                                <div key={label}>
-                                  <div className="flex justify-between mb-1">
-                                    <span className="text-[9px] text-slate-600">{label}</span>
-                                    <span className="text-[9px] font-mono text-slate-500">{Math.round(val * 100)}%</span>
-                                  </div>
-                                  <div className="h-1.5 rounded-full bg-black/40 shadow-inner overflow-hidden border border-white/[0.02]">
-                                    <div className={`h-full rounded-full ${scoreBarColor(val)} transition-all duration-700`} style={{ width: `${Math.round(val * 100)}%` }} />
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Matched Phrase */}
-                          {song.matchedPhrase && song.matchedPhrase.length > 4 && (
-                            <div className="mt-2.5 px-3 py-2 rounded-xl bg-black/25 border border-white/5">
-                              <p className="text-[11px] text-slate-400 italic line-clamp-2">"{song.matchedPhrase}"</p>
-                            </div>
-                          )}
-
-                          {/* Top result — always show links */}
+              {/* Song cards */}
+              {activeView === "songs" && !isLoading && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-6">
+                  {matchedSongs.length === 0 ? (
+                    <div className="col-span-full flex flex-col items-center py-20 gap-3">
+                      <p className="text-5xl">🔍</p>
+                      <p className="text-slate-400 font-semibold">ไม่พบเพลงที่ตรงกัน</p>
+                      <p className="text-slate-600 text-sm">ลองพิมพ์เนื้อเพลงอื่น หรือกดไมค์ร้องเพลง</p>
+                    </div>
+                  ) : (
+                    matchedSongs.map((song, idx) => {
+                      const score = song.score || 0;
+                      const isTop = idx === 0;
+                      const isExpanded = expandedSong === song.id;
+                      const isPlaying = playingSongId === song.id;
+                      return (
+                        <div key={song.id}
+                          className={`rounded-2xl border overflow-hidden transition-all duration-300 group hover:-translate-y-0.5 ${
+                            isTop
+                              ? "bg-gradient-to-br from-violet-900/45 via-purple-900/25 to-slate-900/50 border-violet-500/40 shadow-[0_8px_32px_rgba(139,92,246,0.18)] ring-1 ring-violet-500/15 hover:shadow-[0_12px_40px_rgba(139,92,246,0.25)]"
+                              : "bg-white/[0.025] border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] hover:shadow-xl hover:shadow-black/30"
+                          }`}>
                           {isTop && (
-                            <div className="flex gap-2 mt-3">
-                              <a href={song.youtubeUrl} target="_blank" rel="noreferrer"
-                                className="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl bg-red-600/12 border border-red-500/20 text-red-400 text-[clamp(0.7rem,2vw,0.9rem)] font-medium hover:bg-red-600/20 active:scale-95 transition-all">
-                                <ExternalLink size={11} /> YouTube
-                              </a>
-                              <a href={song.spotifyUrl} target="_blank" rel="noreferrer"
-                                className="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl bg-emerald-600/12 border border-emerald-500/20 text-emerald-400 text-[11px] font-medium hover:bg-emerald-600/20 active:scale-95 transition-all">
-                                <ExternalLink size={11} /> Spotify
-                              </a>
+                            <div className="px-4 py-1.5 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/10 border-b border-violet-500/15 flex items-center gap-2">
+                              <Sparkles size={10} className="text-violet-400" />
+                              <span className="text-[0.62rem] font-bold text-violet-300 tracking-widest uppercase">Best Match</span>
                             </div>
                           )}
+                          <div className="p-4">
+                            <div className="flex items-start gap-3">
+                              <div className="relative flex-shrink-0">
+                                {song.artworkUrl
+                                  ? <img src={song.artworkUrl} alt={song.title} className="w-14 h-14 rounded-xl object-cover border border-white/10 group-hover:scale-[1.03] transition-transform duration-300" />
+                                  : <div className={`w-14 h-14 rounded-xl flex items-center justify-center bg-gradient-to-br ${song.gradient}`}><Music size={20} className="text-white/60" /></div>
+                                }
+                                {!isTop && (
+                                  <div className="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-[#07070f] border border-slate-700 flex items-center justify-center">
+                                    <span className="text-[0.52rem] font-bold text-slate-400">{idx + 1}</span>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0 pt-0.5">
+                                <h3 className="font-bold text-[0.93rem] text-white leading-tight line-clamp-1 group-hover:text-violet-100 transition-colors">{song.title}</h3>
+                                <p className="text-[0.78rem] text-slate-400 mt-0.5 line-clamp-1">{song.artist}</p>
+                                <span className="inline-block mt-1.5 text-[0.58rem] px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-500 border border-white/[0.06] font-medium">{song.moodCategory}</span>
+                              </div>
+                              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex flex-col items-center justify-center ${
+                                score >= 0.8 ? "bg-emerald-500/15 border border-emerald-500/25" :
+                                score >= 0.5 ? "bg-amber-500/15 border border-amber-500/25" :
+                                "bg-white/[0.05] border border-white/[0.08]"}`}>
+                                <span className={`text-sm font-black leading-none ${scoreColor(score)}`}>{Math.round(score * 100)}</span>
+                                <span className="text-[0.48rem] text-slate-600 font-medium">%</span>
+                              </div>
+                            </div>
 
-                          {/* Toggle expand (other songs) */}
-                          {!isTop && (
-                            <button
-                              onClick={() => setExpandedSong(isExpanded ? null : song.id)}
-                              className="mt-2.5 w-full text-[10px] text-slate-600 hover:text-slate-400 transition-colors text-center"
-                            >
-                              {isExpanded ? "ย่อลง ▲" : "ดูลิงก์ ▼"}
-                            </button>
-                          )}
+                            {song.detailedScore && (
+                              <div className="mt-3.5 grid grid-cols-3 gap-2">
+                                {[
+                                  { label: "เนื้อร้อง", val: song.detailedScore.textMatch },
+                                  { label: "เสียง", val: song.detailedScore.phoneticMatch },
+                                  { label: "ความหมาย", val: song.detailedScore.semanticMatch },
+                                ].map(({ label, val }) => (
+                                  <div key={label}>
+                                    <div className="flex justify-between mb-1">
+                                      <span className="text-[0.56rem] text-slate-600 font-medium">{label}</span>
+                                      <span className="text-[0.56rem] font-mono text-slate-500">{Math.round(val * 100)}%</span>
+                                    </div>
+                                    <div className="h-1 rounded-full bg-black/50 overflow-hidden">
+                                      <div className={`h-full rounded-full ${scoreBarColor(val)} transition-all duration-700`} style={{ width: `${Math.round(val * 100)}%` }} />
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
 
-                          {/* Expanded: links + audio */}
-                          {!isTop && isExpanded && (
-                            <div className="mt-2 space-y-2">
-                              {song.previewAudioUrl && (
-                                <button
-                                  onClick={() => toggleAudio(song.id, song.previewAudioUrl)}
-                                  className={`w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-medium transition-all ${
-                                    isPlaying
-                                      ? "bg-violet-600/30 text-violet-300 border border-violet-500/30 animate-pulse"
-                                      : "bg-white/6 text-slate-400 border border-white/8 hover:text-white"
-                                  }`}
-                                >
-                                  {isPlaying ? <Pause size={13} /> : <Play size={13} />}
-                                  {isPlaying ? "กำลังเล่น..." : "🎧 ฟังตัวอย่าง 30 วิ"}
-                                </button>
-                              )}
-                              <div className="flex gap-2">
+                            {song.matchedPhrase && song.matchedPhrase.length > 4 && (
+                              <div className="mt-3 px-3 py-2 rounded-xl bg-gradient-to-r from-violet-500/8 to-transparent border-l-2 border-violet-500/40">
+                                <p className="text-[0.73rem] text-slate-400 italic line-clamp-2">"{song.matchedPhrase}"</p>
+                              </div>
+                            )}
+
+                            {isTop && (
+                              <div className="flex gap-2 mt-3.5">
                                 <a href={song.youtubeUrl} target="_blank" rel="noreferrer"
-                                  className="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl bg-red-600/12 border border-red-500/20 text-red-400 text-[11px] font-medium hover:bg-red-600/20 active:scale-95 transition-all">
+                                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/18 active:scale-95 transition-all">
                                   <ExternalLink size={11} /> YouTube
                                 </a>
                                 <a href={song.spotifyUrl} target="_blank" rel="noreferrer"
-                                  className="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl bg-emerald-600/12 border border-emerald-500/20 text-emerald-400 text-[11px] font-medium hover:bg-emerald-600/20 active:scale-95 transition-all">
+                                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/18 active:scale-95 transition-all">
                                   <ExternalLink size={11} /> Spotify
                                 </a>
                               </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            )}
+                            )}
 
-            {/* WORD RESULTS */}
-            {activeView === "words" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 pb-6">
-                <p className="text-[clamp(0.65rem,1.5vw,0.85rem)] text-slate-600 px-1 pb-1">คำที่มีความหมายใกล้เคียงกัน (Word Embedding)</p>
-                {similarWords.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-3xl mb-2">🔤</p>
-                    <p className="text-slate-500 text-sm">ไม่พบคำใกล้เคียง</p>
-                  </div>
-                ) : (
-                  similarWords.map((item, i) => (
-                    <button
-                      key={item.word}
-                      onClick={() => { setQuery(item.word); doSearch(item.word); setActiveView("songs"); }}
-                      className="w-full flex items-center gap-3 p-3 rounded-2xl bg-white/[0.03] border border-white/8 hover:border-violet-500/30 hover:bg-violet-500/5 active:scale-98 transition-all text-left"
-                    >
-                      <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center flex-shrink-0">
-                        <span className="text-[9px] font-bold text-slate-500">{i + 1}</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <span className="text-sm font-semibold text-white">{item.word}</span>
-                        <p className="text-[10px] text-slate-500 mt-0.5">{item.category || "ความหมายใกล้เคียง"}</p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <div className="w-14 h-1 rounded-full bg-white/10 overflow-hidden">
-                          <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-500" style={{ width: `${Math.round(item.score * 100)}%` }} />
+                            {!isTop && (
+                              <button onClick={() => setExpandedSong(isExpanded ? null : song.id)}
+                                className="mt-3 w-full text-[0.68rem] text-slate-600 hover:text-violet-400 transition-colors text-center py-0.5">
+                                {isExpanded ? "ย่อลง ▲" : "ดูลิงก์เพิ่มเติม ▼"}
+                              </button>
+                            )}
+
+                            {!isTop && isExpanded && (
+                              <div className="mt-2 space-y-2">
+                                {song.previewAudioUrl && (
+                                  <button onClick={() => toggleAudio(song.id, song.previewAudioUrl)}
+                                    className={`w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-medium transition-all ${
+                                      isPlaying ? "bg-violet-600/25 text-violet-300 border border-violet-500/30 animate-pulse" : "bg-white/[0.05] text-slate-400 border border-white/[0.08] hover:text-white"}`}>
+                                    {isPlaying ? <Pause size={12} /> : <Play size={12} />}
+                                    {isPlaying ? "กำลังเล่น..." : "🎧 ฟังตัวอย่าง 30 วิ"}
+                                  </button>
+                                )}
+                                <div className="flex gap-2">
+                                  <a href={song.youtubeUrl} target="_blank" rel="noreferrer"
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/18 active:scale-95 transition-all">
+                                    <ExternalLink size={11} /> YouTube
+                                  </a>
+                                  <a href={song.spotifyUrl} target="_blank" rel="noreferrer"
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/18 active:scale-95 transition-all">
+                                    <ExternalLink size={11} /> Spotify
+                                  </a>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        <span className="text-[10px] font-mono text-violet-400 w-7 text-right">{Math.round(item.score * 100)}%</span>
-                        <ChevronRight size={11} className="text-slate-700" />
-                      </div>
-                    </button>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+                      );
+                    })
+                  )}
+                </div>
+              )}
+
+              {/* Word results */}
+              {activeView === "words" && (
+                <div className="pb-6">
+                  <p className="text-xs text-slate-600 mb-3 font-medium">คำที่มีความหมายใกล้เคียงกัน (Word Embedding)</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                    {similarWords.length === 0
+                      ? <div className="col-span-full flex flex-col items-center py-16 gap-3"><p className="text-4xl">🔤</p><p className="text-slate-500 text-sm">ไม่พบคำใกล้เคียง</p></div>
+                      : similarWords.map((item, i) => (
+                        <button key={item.word} onClick={() => { setQuery(item.word); doSearch(item.word); setActiveView("songs"); }}
+                          className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.07] hover:border-violet-500/30 hover:bg-violet-500/[0.06] active:scale-[0.98] transition-all text-left group">
+                          <div className="w-6 h-6 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center flex-shrink-0">
+                            <span className="text-[0.58rem] font-bold text-slate-500">{i + 1}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[0.88rem] font-semibold text-white group-hover:text-violet-200 transition-colors">{item.word}</span>
+                            <p className="text-[0.63rem] text-slate-500 mt-0.5">{item.category || "ความหมายใกล้เคียง"}</p>
+                          </div>
+                          <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                            <span className="text-[0.63rem] font-mono text-violet-400">{Math.round(item.score * 100)}%</span>
+                            <div className="w-12 h-1 rounded-full bg-white/10 overflow-hidden">
+                              <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-500" style={{ width: `${Math.round(item.score * 100)}%` }} />
+                            </div>
+                          </div>
+                        </button>
+                      ))
+                    }
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </main>
 
-      {/* ── BOTTOM NAV ── */}
-      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-30 md:hidden border-t border-white/[0.08] bg-[#080811]/70 backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] px-8 py-3 safe-area-bottom">
-        <div className="flex items-center justify-around">
-          <button
-            onClick={() => setActiveView("songs")}
-            className={`flex flex-col items-center gap-0.5 px-5 py-1 rounded-xl transition-all ${
-              activeView === "songs" && hasSearched ? "text-violet-400" : "text-slate-600 hover:text-slate-400"
-            }`}
-          >
-            <ListMusic size={20} />
-            <span className="text-[9px] font-medium">เพลง</span>
+      {/* MOBILE BOTTOM NAV */}
+      <nav className="fixed bottom-0 left-0 right-0 z-30 md:hidden border-t border-white/[0.07] bg-[#07070f]/85 backdrop-blur-2xl shadow-[0_-12px_40px_rgba(0,0,0,0.6)]">
+        <div className="flex items-center justify-around px-6 pt-3 pb-5">
+          <button onClick={() => setActiveView("songs")}
+            className={`flex flex-col items-center gap-1 px-6 py-1 rounded-xl transition-all ${activeView === "songs" && hasSearched ? "text-violet-400" : "text-slate-600 hover:text-slate-400"}`}>
+            <ListMusic size={22} /><span className="text-[0.6rem] font-semibold">เพลง</span>
           </button>
 
-          {/* Centre Mic */}
-          <button
-            onClick={toggleMic}
-            className={`relative w-14 h-14 rounded-[20px] flex items-center justify-center transition-all active:scale-90 shadow-xl ${
-              isListening
-                ? "bg-rose-500 shadow-rose-500/50"
-                : "bg-gradient-to-br from-violet-500 to-pink-600 shadow-violet-500/40"
-            }`}
-          >
-            {isListening && (
-              <div className="absolute inset-0 rounded-[20px] border-2 border-rose-400/60 animate-ping" />
-            )}
+          <button onClick={toggleMic}
+            className={`relative w-14 h-14 rounded-[18px] flex items-center justify-center transition-all active:scale-90 shadow-2xl ${
+              isListening ? "bg-rose-500 shadow-rose-500/50" : "bg-gradient-to-br from-violet-500 to-fuchsia-600 shadow-violet-500/40"}`}>
+            {isListening && <div className="absolute inset-0 rounded-[18px] border-2 border-rose-400/50 animate-ping" />}
             {isListening ? <MicOff size={22} className="text-white" /> : <Mic size={22} className="text-white" />}
           </button>
 
-          <button
-            onClick={() => setActiveView("words")}
-            className={`flex flex-col items-center gap-0.5 px-5 py-1 rounded-xl transition-all ${
-              activeView === "words" && hasSearched ? "text-violet-400" : "text-slate-600 hover:text-slate-400"
-            }`}
-          >
-            <Sparkles size={20} />
-            <span className="text-[9px] font-medium">คำใกล้เคียง</span>
+          <button onClick={() => setActiveView("words")}
+            className={`flex flex-col items-center gap-1 px-6 py-1 rounded-xl transition-all ${activeView === "words" && hasSearched ? "text-violet-400" : "text-slate-600 hover:text-slate-400"}`}>
+            <Sparkles size={22} /><span className="text-[0.6rem] font-semibold">คำใกล้เคียง</span>
           </button>
         </div>
       </nav>
     </div>
   );
 }
-
