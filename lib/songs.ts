@@ -15,7 +15,9 @@ export interface ThaiSong {
   famousHooks?: string[];
   misheardVariants?: string[];
   gradient: string;
+  albumArt?: string;
   artworkUrl?: string;
+  previewUrl?: string;
   previewAudioUrl?: string;
   youtubeUrl: string;
   spotifyUrl: string;
@@ -40,6 +42,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ไม่มีเวลาไปหาเมียน้อย", "อยากมีเวลาไปหาเมียน้อย"],
     misheardVariants: ["อยากมีเวลาไปหาเมียน้อย", "ไม่มีเวลาไปหาเมีย"],
     gradient: "from-amber-700 via-orange-800 to-yellow-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/5b/46/8b/5b468bad-9bdf-0366-f4b7-df4abb459715/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/5b/46/8b/5b468bad-9bdf-0366-f4b7-df4abb459715/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/26/1a/a6/261aa6cb-7a87-e854-0ef3-64ee2d6761dd/mzaf_11892575239634674633.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/26/1a/a6/261aa6cb-7a87-e854-0ef3-64ee2d6761dd/mzaf_11892575239634674633.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ไม่มีเวลาไปหาเมียน้อย+ยอดรัก",
     spotifyUrl: "https://open.spotify.com/search/ไม่มีเวลาไปหาเมียน้อย"
   },
@@ -54,6 +60,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ซื้อห่อหมกเอาไปฝากป้า", "รักจางที่บางปะกง", "สาวรำวง"],
     misheardVariants: ["หอหมกเอาไปฝากป้า", "ห่อหมกฝากป้า", "ซื้อห่อหมกฝากยาย", "รักจางที่บางประกง"],
     gradient: "from-teal-800 via-emerald-900 to-green-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/84/6e/7f/846e7f27-2767-a158-891f-7201775df6bf/3610159861499.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/84/6e/7f/846e7f27-2767-a158-891f-7201775df6bf/3610159861499.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/44/7f/b5/447fb5b3-f2ed-9e05-866b-552666200d89/mzaf_5074810786245243871.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/44/7f/b5/447fb5b3-f2ed-9e05-866b-552666200d89/mzaf_5074810786245243871.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=รักจางที่บางปะกง",
     spotifyUrl: "https://open.spotify.com/search/รักจางที่บางปะกง"
   },
@@ -68,6 +78,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ต้องจากบ้านนา ถูกเกณฑ์เข้ามา", "ทบ.2 ลูกอีสาน", "มาประจำการชายแดนมาเลย์"],
     misheardVariants: ["ต้องจากบ้านนา", "ถูกเกณเข้ามา", "ทบ2ลูกอีสาน", "บ้านนาถูกเกณฑ์"],
     gradient: "from-amber-900 via-yellow-900 to-orange-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/1a/33/a5/1a33a51e-0429-f8fb-b708-22d46e9c90ae/888332972352.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/1a/33/a5/1a33a51e-0429-f8fb-b708-22d46e9c90ae/888332972352.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ee/af/a2/eeafa236-6203-1663-d6c0-7a27f0b2133b/mzaf_932770962758419181.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ee/af/a2/eeafa236-6203-1663-d6c0-7a27f0b2133b/mzaf_932770962758419181.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ทบ.2+ลูกอีสาน+ไผ่+พงศธร",
     spotifyUrl: "https://open.spotify.com/search/ทบ.2+ลูกอีสาน"
   },
@@ -82,6 +96,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["สาวนาสั่งแฟน", "อย่าทิ้งกันไป", "จะรอเธอทุกวันคืน"],
     misheardVariants: ["สาวนาสั่งแฟน ไผ่", "สาวนาสั่ง", "สั่งแฟนก่อนลา"],
     gradient: "from-green-700 via-emerald-800 to-lime-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d6/4c/04/d64c04fb-0f71-fd85-298e-1961a9ce0fc0/888332970990.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d6/4c/04/d64c04fb-0f71-fd85-298e-1961a9ce0fc0/888332970990.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2b/b0/71/2bb071d8-90fd-2e0e-c800-330ae195bdc7/mzaf_90161783648859862.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2b/b0/71/2bb071d8-90fd-2e0e-c800-330ae195bdc7/mzaf_90161783648859862.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=สาวนาสั่งแฟน+ไผ่+พงศธร",
     spotifyUrl: "https://open.spotify.com/search/สาวนาสั่งแฟน"
   },
@@ -96,6 +114,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["หนาวแสงนีออน", "หัวใจหมองเหมือนฟ้าครึ้มฝน", "กลางกรุงเทพฯ"],
     misheardVariants: ["หนาวแสงนีออน ธงไชย", "หนาวๆแสงนีออน", "แสงนีออนกลางดึก"],
     gradient: "from-blue-900 via-indigo-950 to-slate-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/93/e4/65/93e465b7-7474-d3ba-8bf8-a35c0303040a/888332978637.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/93/e4/65/93e465b7-7474-d3ba-8bf8-a35c0303040a/888332978637.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/34/ca/eb/34caeb87-f2b0-5ee6-1dd2-c7ea4a2c158d/mzaf_12142009513708047749.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/34/ca/eb/34caeb87-f2b0-5ee6-1dd2-c7ea4a2c158d/mzaf_12142009513708047749.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=หนาวแสงนีออน+ธงไชย",
     spotifyUrl: "https://open.spotify.com/search/หนาวแสงนีออน"
   },
@@ -110,6 +132,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["มนต์รักดอกคำใต้", "ดอกคำใต้บานสะพรั่ง", "หอมกลิ่นดอกคำใต้"],
     misheardVariants: ["มนต์รักดอกคำใต้ ศิรินทรา", "ดอกคำใต้", "บานสะพรั่ง"],
     gradient: "from-yellow-600 via-amber-700 to-orange-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music5/v4/3d/fe/cb/3dfecb99-bb93-eecb-5675-89932e223337/test.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music5/v4/3d/fe/cb/3dfecb99-bb93-eecb-5675-89932e223337/test.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/24/4c/67/244c6721-9863-a216-ebf5-db24f1137196/mzaf_8486815487908379598.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/24/4c/67/244c6721-9863-a216-ebf5-db24f1137196/mzaf_8486815487908379598.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=มนต์รักดอกคำใต้+ศิรินทรา",
     spotifyUrl: "https://open.spotify.com/search/มนต์รักดอกคำใต้"
   },
@@ -126,6 +152,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ยิ้มสู้", "แม้ใจจะแสนเจ็บปวด", "ต่อให้ชีวิตมันขมขื่น"],
     misheardVariants: ["ยิ้มสู้ เบิร์ด", "แม้ใจเจ็บปวด", "ยิ้มสู้ต่อไป"],
     gradient: "from-yellow-500 via-amber-600 to-orange-700",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/53/03/81/530381c9-b271-3963-335a-2cbead8b7b79/888332137959.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/53/03/81/530381c9-b271-3963-335a-2cbead8b7b79/888332137959.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1b/98/bb/1b98bb25-aa28-68ed-68e3-22fb171d224f/mzaf_18370179776944489763.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1b/98/bb/1b98bb25-aa28-68ed-68e3-22fb171d224f/mzaf_18370179776944489763.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ยิ้มสู้+เบิร์ด+ธงไชย",
     spotifyUrl: "https://open.spotify.com/search/ยิ้มสู้+ธงไชย"
   },
@@ -140,6 +170,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ต่อให้ใครไม่รัก", "ต่อให้ใครไม่สน", "ฉันก็ยังมีชีวิตอยู่ได้"],
     misheardVariants: ["ต่อให้ใครไม่รัก บอดี้สแลม", "ไม่รักก็ไม่เป็นไร", "ต่อให้ไม่รัก"],
     gradient: "from-orange-700 via-red-800 to-zinc-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/7c/8a/31/7c8a31a7-e16e-6714-23b7-18bc328e4554/888332972390.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/7c/8a/31/7c8a31a7-e16e-6714-23b7-18bc328e4554/888332972390.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fc/38/1e/fc381e93-8e60-fd3d-e780-70c2aa8bd567/mzaf_3571313934466168581.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fc/38/1e/fc381e93-8e60-fd3d-e780-70c2aa8bd567/mzaf_3571313934466168581.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ต่อให้ใครไม่รัก+บอดี้สแลม",
     spotifyUrl: "https://open.spotify.com/search/ต่อให้ใครไม่รัก+บอดี้สแลม"
   },
@@ -154,6 +188,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["เพียงชายคนนี้", "ไม่ใช่ผู้วิเศษ", "ไม่มีปีกบิน"],
     misheardVariants: ["เพียงชายคนนี้ Instinct", "ชายคนนี้ไม่ใช่ผู้วิเศษ"],
     gradient: "from-blue-700 via-sky-800 to-slate-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e4/52/8c/e4528cba-cb0e-31f9-b476-fe1b91bc22e0/888332946902.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e4/52/8c/e4528cba-cb0e-31f9-b476-fe1b91bc22e0/888332946902.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7f/5c/ae/7f5cae99-ac06-b69a-6ee5-38c0884ae4d7/mzaf_1260086953031912456.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7f/5c/ae/7f5cae99-ac06-b69a-6ee5-38c0884ae4d7/mzaf_1260086953031912456.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=เพียงชายคนนี้+Instinct",
     spotifyUrl: "https://open.spotify.com/search/เพียงชายคนนี้"
   },
@@ -170,6 +208,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ที่เธอเคยบอกฉัน อย่าร้องไห้", "อยู่ให้ได้ถ้าเธอไม่อยู่", "ภาพที่วาดไว้ในใจ"],
     misheardVariants: ["อย่าร้องห้าย", "อยู่ไห้ได้", "วาตไว้", "ที่เทอเคยบอก"],
     gradient: "from-slate-800 via-indigo-950 to-zinc-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/0f/0f/42/0f0f4249-8f24-a6e8-56e4-6ec088900d93/25UMGIM79865.rgb.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/0f/0f/42/0f0f4249-8f24-a6e8-56e4-6ec088900d93/25UMGIM79865.rgb.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/14/66/49/1466491a-b745-525c-7b96-321b4fd231d0/mzaf_16914207157708959097.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/14/66/49/1466491a-b745-525c-7b96-321b4fd231d0/mzaf_16914207157708959097.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=วาดไว้+BOWKYLION",
     spotifyUrl: "https://open.spotify.com/search/วาดไว้%20BOWKYLION"
   },
@@ -184,6 +226,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["หรือเป็นเพราะเลือดกรุ๊ปบีหรือเปล่า", "มีน้ำตาคลอเบ้า", "เลือดกรุ๊ปบี"],
     misheardVariants: ["เลือดกุ๊ปบี", "เลือดกรุปบี", "เลือดกรุ๊ปบีรึป่าว"],
     gradient: "from-rose-950 via-purple-950 to-slate-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/9f/64/86/9f6486f1-746c-d3b5-1569-3a6294cdfea0/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/9f/64/86/9f6486f1-746c-d3b5-1569-3a6294cdfea0/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview123/v4/ca/32/cb/ca32cbd3-6e00-5d33-72c4-7d71ee456d73/mzaf_15308886385266869376.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview123/v4/ca/32/cb/ca32cbd3-6e00-5d33-72c4-7d71ee456d73/mzaf_15308886385266869376.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=เลือดกรุ๊ปบี+Chrrissa",
     spotifyUrl: "https://open.spotify.com/search/เลือดกรุ๊ปบี"
   },
@@ -198,6 +244,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ทรงอย่างแบด แซดอย่างบ่อย", "เธอเข้ามาอ่อยแล้วก็ทิ้งไป"],
     misheardVariants: ["ทรงยังแบด", "แซดอย่างบอย", "เปเปอเพลน"],
     gradient: "from-red-600 via-orange-600 to-zinc-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/61/00/f3/6100f3a3-619f-69fd-658b-560b78b15a29/888332907217.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/61/00/f3/6100f3a3-619f-69fd-658b-560b78b15a29/888332907217.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8c/90/a0/8c90a081-b8f8-8d89-acf7-3531400bd49d/mzaf_1875861912879165721.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8c/90/a0/8c90a081-b8f8-8d89-acf7-3531400bd49d/mzaf_1875861912879165721.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ทรงอย่างแบด+Paper+Planes",
     spotifyUrl: "https://open.spotify.com/search/ทรงอย่างแบด"
   },
@@ -212,6 +262,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["เธอมานั่งโต๊ะริมติดหน้าต่างตรงนั้น", "สบตาเพียงแป๊บเดียวใจก็ละลาย", "โต๊ะริม"],
     misheardVariants: ["โตะริม", "โต๊ะริมติดน่าต่าง", "ใจละลายไปกับเธอ"],
     gradient: "from-cyan-600 via-teal-600 to-slate-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/5d/70/fe/5d70fe6e-f3e4-c874-a2de-e4ecd186bf80/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/5d/70/fe/5d70fe6e-f3e4-c874-a2de-e4ecd186bf80/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f4/5f/f4/f45ff486-6fa0-9df5-9d58-8ed552c86140/mzaf_5412811150878921175.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f4/5f/f4/f45ff486-6fa0-9df5-9d58-8ed552c86140/mzaf_5412811150878921175.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=โต๊ะริม+NONT+TANONT",
     spotifyUrl: "https://open.spotify.com/search/โต๊ะริม%20NONT%20TANONT"
   },
@@ -240,6 +294,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ทักครับ เธอชื่ออะไรอ่ะ", "มีแฟนหรือยัง", "ถ้ายังไม่มีขอจีบได้ไหม"],
     misheardVariants: ["ทักคราฟ", "ทักคับ", "เทอชื่ออะไรอะ", "ขอจีบได้มั้ย"],
     gradient: "from-yellow-500 via-orange-500 to-rose-600",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/03/05/78/0305781f-f8ef-04a9-8eb6-3b9de0574051/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/03/05/78/0305781f-f8ef-04a9-8eb6-3b9de0574051/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f7/45/b6/f745b644-d98a-e02d-bf0b-525d4f3d7589/mzaf_13381419881567407789.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f7/45/b6/f745b644-d98a-e02d-bf0b-525d4f3d7589/mzaf_13381419881567407789.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ทักครับ+Lipta",
     spotifyUrl: "https://open.spotify.com/search/ทักครับ%20Lipta"
   },
@@ -254,6 +312,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["เป่าคาถา มหาระรวย", "ให้เธอหลงรักจนหมดหัวใจ", "นะหน้าทอง"],
     misheardVariants: ["เป่าคาถามหาระรวย", "มหาระรวย", "คาถานะหน้าทอง"],
     gradient: "from-amber-600 via-yellow-700 to-stone-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/67/40/40/67404052-23d4-b18a-2b6a-215fdaac94b6/888332908993.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/67/40/40/67404052-23d4-b18a-2b6a-215fdaac94b6/888332908993.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/60/cc/96/60cc96ee-d36d-201c-0ae7-a8f9d43d672e/mzaf_17220888096056606772.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/60/cc/96/60cc96ee-d36d-201c-0ae7-a8f9d43d672e/mzaf_17220888096056606772.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=นะหน้าทอง+โจอี้",
     spotifyUrl: "https://open.spotify.com/search/นะหน้าทอง"
   },
@@ -268,6 +330,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ทนได้ทุกที", "เจ็บและช้ำมากี่ครั้ง", "ทนไม่ได้ถ้าเธอจะจากไป"],
     misheardVariants: ["ทนได้ทุกทีที่เธอทำช้ำใจ", "ทนได้ทุกทีที่เธอ", "ทนทุกที TaitosmitH"],
     gradient: "from-rose-800 via-red-900 to-zinc-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/5d/c7/c4/5dc7c42d-fb41-bed7-e3b2-92352ce8e752/888332903004.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/5d/c7/c4/5dc7c42d-fb41-bed7-e3b2-92352ce8e752/888332903004.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f0/7a/7d/f07a7dfc-69f5-3fee-3e89-2defb4f4c2e9/mzaf_18323568041534034953.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f0/7a/7d/f07a7dfc-69f5-3fee-3e89-2defb4f4c2e9/mzaf_18323568041534034953.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ทนได้ทุกที+TaitosmitH",
     spotifyUrl: "https://open.spotify.com/search/ทนได้ทุกที+TaitosmitH"
   },
@@ -282,6 +348,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ฉันมันแค่คนคุย", "ไม่ใช่คนรัก", "แค่คนที่เธอโทรมาเมื่อเศร้า"],
     misheardVariants: ["แค่คนคุย ไม่ใช่คนรัก", "คนคุย Lipta", "ฉันแค่คนคุย"],
     gradient: "from-slate-700 via-gray-800 to-zinc-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/33/a9/b0/33a9b043-63ea-6114-ab6e-5de2027cb27a/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/33/a9/b0/33a9b043-63ea-6114-ab6e-5de2027cb27a/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/9e/3a/7d/9e3a7d09-003c-f3b5-49b6-c2a627a2b373/mzaf_17146489932272145354.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/9e/3a/7d/9e3a7d09-003c-f3b5-49b6-c2a627a2b373/mzaf_17146489932272145354.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=แค่คนคุย+Lipta",
     spotifyUrl: "https://open.spotify.com/search/แค่คนคุย+Lipta"
   },
@@ -296,6 +366,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ก็ไม่ได้คิดเบื่อแต่มันก็คิดถึงเธอ", "14 อีกครั้ง", "ทุกที่ที่ฉันไป"],
     misheardVariants: ["ไม่ได้คิดเบื่อแต่ก็คิดถึงเธอ", "คิดถึงเธอทุกที่", "14 อีกครั้ง Mild"],
     gradient: "from-indigo-700 via-blue-800 to-slate-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/02/b8/2d/02b82dfb-e68f-f570-c3ed-5c1dd8a986a0/888332978453.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/02/b8/2d/02b82dfb-e68f-f570-c3ed-5c1dd8a986a0/888332978453.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bf/52/85/bf5285f3-f900-4ba5-d15c-9fb718f9c9a1/mzaf_7410085405033923403.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bf/52/85/bf5285f3-f900-4ba5-d15c-9fb718f9c9a1/mzaf_7410085405033923403.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=14+อีกครั้ง+Mild",
     spotifyUrl: "https://open.spotify.com/search/14+อีกครั้ง+Mild"
   },
@@ -310,6 +384,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["สายฝน", "สายฝนที่โปรยปราย", "ชวนให้หัวใจเหงา"],
     misheardVariants: ["สายฝน บอดี้สแลม", "ฝนโปรยปราย", "ฝนตกคิดถึงเธอ"],
     gradient: "from-sky-800 via-blue-900 to-slate-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music111/v4/ff/b3/4f/ffb34fcf-bbf5-535e-530e-535dde6e5164/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music111/v4/ff/b3/4f/ffb34fcf-bbf5-535e-530e-535dde6e5164/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/42/9b/c2/429bc2a9-7048-5d1a-f9a0-959ec95d59b8/mzaf_2127674775806246231.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/42/9b/c2/429bc2a9-7048-5d1a-f9a0-959ec95d59b8/mzaf_2127674775806246231.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=สายฝน+บอดี้สแลม",
     spotifyUrl: "https://open.spotify.com/search/สายฝน+บอดี้สแลม"
   },
@@ -324,6 +402,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["สักวันฉันจะดีพอ", "สักวันฉันจะเก่งพอ", "ให้เธอภูมิใจในตัวฉัน"],
     misheardVariants: ["สักวันจะดีพอ", "ดีพอ Bedroom Audio", "วันนึงจะดีพอ"],
     gradient: "from-purple-700 via-violet-800 to-slate-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music7/v4/1b/1c/96/1b1c960e-0862-95f5-3172-ba689bc95594/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music7/v4/1b/1c/96/1b1c960e-0862-95f5-3172-ba689bc95594/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/d6/0a/6b/d60a6b54-ec31-18bd-3d09-c3d0e58a15b8/mzaf_5031067836471649061.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/d6/0a/6b/d60a6b54-ec31-18bd-3d09-c3d0e58a15b8/mzaf_5031067836471649061.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=สักวันฉันจะดีพอ+Bedroom+Audio",
     spotifyUrl: "https://open.spotify.com/search/สักวันฉันจะดีพอ"
   },
@@ -338,6 +420,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["คนไม่คุย", "Silent Mode", "ตอบไลน์เธอก็ช้า", "เหมือนไม่ค่อยแคร์"],
     misheardVariants: ["คนไม่คุย Proxie", "ไม่คุย ไม่แคร์", "silent mode เพลง"],
     gradient: "from-gray-700 via-slate-800 to-zinc-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e5/d5/1d/e5d51db9-6b50-89f1-65d9-35b436440439/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e5/d5/1d/e5d51db9-6b50-89f1-65d9-35b436440439/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e0/c2/a3/e0c2a3bb-aef0-43bd-922d-cbc01fa0d3b2/mzaf_6637886844505349168.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e0/c2/a3/e0c2a3bb-aef0-43bd-922d-cbc01fa0d3b2/mzaf_6637886844505349168.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=คนไม่คุย+Proxie",
     spotifyUrl: "https://open.spotify.com/search/คนไม่คุย+Proxie"
   },
@@ -354,6 +440,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["เพื่อนเอ๋ยเพื่อน", "ฉันนับถือเธอ", "เพื่อนแท้"],
     misheardVariants: ["เพื่อน บอดี้สแลม", "เธอรู้ไหมว่าฉันนับถือ"],
     gradient: "from-blue-700 via-indigo-800 to-slate-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e8/4b/b0/e84bb0bc-df2b-3e58-cd12-79e9e90ec6eb/888332927727.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e8/4b/b0/e84bb0bc-df2b-3e58-cd12-79e9e90ec6eb/888332927727.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f5/09/1c/f5091c22-938d-91ff-18c3-caa1b7ac9f3e/mzaf_9224781468942802203.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f5/09/1c/f5091c22-938d-91ff-18c3-caa1b7ac9f3e/mzaf_9224781468942802203.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=เพื่อน+บอดี้สแลม",
     spotifyUrl: "https://open.spotify.com/search/เพื่อน+บอดี้สแลม"
   },
@@ -368,6 +458,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["เธอยังนอนหลับอยู่", "ฉันนั่งมองเธออยู่ทั้งคืน"],
     misheardVariants: ["เธอยังนอนหลับ Lula", "นอนหลับอยู่ไม่รู้สึก"],
     gradient: "from-violet-800 via-purple-900 to-slate-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/7a/44/01/7a4401cd-6f86-9769-f56d-1e011f3747ed/888332926591.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/7a/44/01/7a4401cd-6f86-9769-f56d-1e011f3747ed/888332926591.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/00/d6/6a/00d66ada-8c84-fa38-690d-06c4f117db14/mzaf_13517933317183766982.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/00/d6/6a/00d66ada-8c84-fa38-690d-06c4f117db14/mzaf_13517933317183766982.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=เธอยังนอนหลับอยู่+Lula",
     spotifyUrl: "https://open.spotify.com/search/เธอยังนอนหลับอยู่"
   },
@@ -382,6 +476,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["รักเธอทั้งที่รู้ว่าเธอไม่รัก", "จะหยุดรักก็ทำไม่ได้"],
     misheardVariants: ["รักทั้งที่รู้ว่าไม่รัก", "Potato รัก"],
     gradient: "from-rose-800 via-pink-900 to-slate-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/fb/ab/7a/fbab7ae3-9525-8d85-d337-01edb76fdab0/888332900805.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/fb/ab/7a/fbab7ae3-9525-8d85-d337-01edb76fdab0/888332900805.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a9/e0/eb/a9e0eb67-4178-6582-5697-83592742bf37/mzaf_11909962344803278846.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a9/e0/eb/a9e0eb67-4178-6582-5697-83592742bf37/mzaf_11909962344803278846.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=รักเธอทั้งที่รู้ว่าเธอไม่รัก+Potato",
     spotifyUrl: "https://open.spotify.com/search/รักเธอทั้งที่รู้ว่าเธอไม่รัก"
   },
@@ -396,6 +494,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["กลับมาได้ไหม", "ยังรักเธออยู่", "จะรอเธอทุกวัน"],
     misheardVariants: ["กลับมาไหม BIG ASS", "กลับมาหาฉัน"],
     gradient: "from-orange-700 via-red-800 to-zinc-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ad/a7/ad/ada7adf6-8b79-647b-ec09-b011674dcc65/888332978811.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ad/a7/ad/ada7adf6-8b79-647b-ec09-b011674dcc65/888332978811.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7a/73/6f/7a736ff6-928f-8aa5-00e7-e19972bfb316/mzaf_2211032680049466441.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7a/73/6f/7a736ff6-928f-8aa5-00e7-e19972bfb316/mzaf_2211032680049466441.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=กลับมาได้ไหม+BIG+ASS",
     spotifyUrl: "https://open.spotify.com/search/กลับมาได้ไหม+BIG+ASS"
   },
@@ -412,6 +514,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ขอบคุณที่รักกัน", "ขอบคุณที่อยู่เคียงข้าง"],
     misheardVariants: ["ขอบคุณ Scrubb", "ขอบคุณที่รักกัน Scrubb"],
     gradient: "from-emerald-700 via-teal-800 to-slate-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ae/96/c1/ae96c1b8-5604-c550-47ba-d00eb27f5707/888332979047.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ae/96/c1/ae96c1b8-5604-c550-47ba-d00eb27f5707/888332979047.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/11/9b/b7/119bb7bb-4063-d44f-8b55-aabccacf2ffc/mzaf_10768527079650164179.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/11/9b/b7/119bb7bb-4063-d44f-8b55-aabccacf2ffc/mzaf_10768527079650164179.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ขอบคุณ+Scrubb",
     spotifyUrl: "https://open.spotify.com/search/ขอบคุณ+Scrubb"
   },
@@ -426,6 +532,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ป่านนี้เธออยู่ที่ไหน", "ยังดีอยู่ไหม", "ฉันก็ยังคิดถึง"],
     misheardVariants: ["ป่านนี้ Lula", "ป่านนี้เธออยู่ไหน"],
     gradient: "from-purple-700 via-indigo-800 to-slate-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/f9/3e/2a/f93e2a34-8b30-c807-c811-b5d12186621e/888332983310.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/f9/3e/2a/f93e2a34-8b30-c807-c811-b5d12186621e/888332983310.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3b/d5/7b/3bd57b69-4af2-6723-8a32-b0817767626a/mzaf_7623145538975859349.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3b/d5/7b/3bd57b69-4af2-6723-8a32-b0817767626a/mzaf_7623145538975859349.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ป่านนี้+Lula",
     spotifyUrl: "https://open.spotify.com/search/ป่านนี้+Lula"
   },
@@ -470,6 +580,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ลืมเธอได้ก็ดี", "แต่มันทำไม่ได้", "ยังคิดถึงเธออยู่"],
     misheardVariants: ["ลืมเธอได้ก็ดี ATLAS", "ลืมได้ก็ดี"],
     gradient: "from-indigo-700 via-purple-800 to-slate-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/b3/10/f7/b310f75e-2465-705c-7d55-0480dcce3b98/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/b3/10/f7/b310f75e-2465-705c-7d55-0480dcce3b98/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ab/16/c1/ab16c133-7bdc-01e6-0e6c-f9ff0c8c9f41/mzaf_3282050872927801930.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ab/16/c1/ab16c133-7bdc-01e6-0e6c-f9ff0c8c9f41/mzaf_3282050872927801930.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ลืมเธอได้ก็ดี+ATLAS",
     spotifyUrl: "https://open.spotify.com/search/ลืมเธอได้ก็ดี"
   },
@@ -500,6 +614,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["หมวยนี่คะ", "ไม่ได้ตั้งใจ", "อาหมวย"],
     misheardVariants: ["ก็หมวยนี่คะ", "หมวยนี้คะ China Dolls"],
     gradient: "from-red-600 via-pink-700 to-rose-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9d/c0/62/9dc06209-2aa1-9f7b-af29-b2fb4477c230/888332987714.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9d/c0/62/9dc06209-2aa1-9f7b-af29-b2fb4477c230/888332987714.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ba/99/95/ba9995ab-cd24-0747-6df8-887660bbe33a/mzaf_16318355058843765010.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ba/99/95/ba9995ab-cd24-0747-6df8-887660bbe33a/mzaf_16318355058843765010.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=หมวยนี่คะ+China+Dolls",
     spotifyUrl: "https://open.spotify.com/search/หมวยนี่คะ"
   },
@@ -514,6 +632,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["เธอนั่งอยู่ข้างๆ ฉันไม่ได้รู้สึก", "จะอยู่ด้วยกันไปเพื่ออะไร"],
     misheardVariants: ["นั่งข้างๆ ไม่รู้สึก", "ไม่รู้สึกอะไรแล้ว"],
     gradient: "from-gray-700 via-slate-800 to-zinc-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/a4/c0/0d/a4c00d21-74fd-6fc0-f983-ca4a18b41ea0/190296652783.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/a4/c0/0d/a4c00d21-74fd-6fc0-f983-ca4a18b41ea0/190296652783.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/55/0a/cf/550acf20-04fa-8f88-77b8-36a30260b239/mzaf_809632077336477318.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/55/0a/cf/550acf20-04fa-8f88-77b8-36a30260b239/mzaf_809632077336477318.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=เธอนั่งอยู่ข้างๆ+Yokee+Playboy",
     spotifyUrl: "https://open.spotify.com/search/เธอนั่งอยู่ข้างๆ"
   },
@@ -528,6 +650,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["สักวันเธอจะเข้าใจ", "ฉันรักเธอแค่ไหน"],
     misheardVariants: ["สักวันจะเข้าใจ Season Five", "เธอจะเข้าใจสักวัน"],
     gradient: "from-violet-700 via-purple-800 to-slate-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music4/v4/f8/b8/b1/f8b8b1ac-fdd6-e747-84e5-f5f95ff4de55/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music4/v4/f8/b8/b1/f8b8b1ac-fdd6-e747-84e5-f5f95ff4de55/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/31/24/96/31249658-68dd-9a37-ec59-0f4890544879/mzaf_15561524050237025967.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/31/24/96/31249658-68dd-9a37-ec59-0f4890544879/mzaf_15561524050237025967.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=สักวันเธอจะเข้าใจ+Season+Five",
     spotifyUrl: "https://open.spotify.com/search/สักวันเธอจะเข้าใจ"
   },
@@ -542,6 +668,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["เพลงของเรา", "เพลงที่เราเคยฟังด้วยกัน", "ก็คิดถึงเธอ"],
     misheardVariants: ["เพลงของเรา Scrubb", "เพลงเราสองคน"],
     gradient: "from-teal-600 via-cyan-700 to-slate-900",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d0/39/b8/d039b825-8cde-4362-2400-4c612097dd46/cover.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d0/39/b8/d039b825-8cde-4362-2400-4c612097dd46/cover.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/21/f0/fd/21f0fd22-99d6-addf-ac2b-5388a36a18cd/mzaf_17448532609009968986.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/21/f0/fd/21f0fd22-99d6-addf-ac2b-5388a36a18cd/mzaf_17448532609009968986.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=เพลงของเรา+Scrubb",
     spotifyUrl: "https://open.spotify.com/search/เพลงของเรา+Scrubb"
   },
@@ -588,6 +718,10 @@ export const CURATED_THAI_SONGS: ThaiSong[] = [
     famousHooks: ["ใจเย็นๆ", "ใจเย็นๆ หน่อยได้ไหม"],
     misheardVariants: ["ใจเย็น หิน เหล็ก ไฟ", "ใจเย็นหน่อย"],
     gradient: "from-orange-600 via-amber-700 to-stone-950",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/f9/7c/3d/f97c3da2-f640-23a3-e6d7-9a649b9b9847/23UM1IM50440.rgb.jpg/600x600bb.jpg",
+    artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/f9/7c/3d/f97c3da2-f640-23a3-e6d7-9a649b9b9847/23UM1IM50440.rgb.jpg/600x600bb.jpg",
+    previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/85/bc/d5/85bcd57c-bd2b-286d-19c6-d4ccdb6cb107/mzaf_12758905673210241851.plus.aac.p.m4a",
+    previewAudioUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/85/bc/d5/85bcd57c-bd2b-286d-19c6-d4ccdb6cb107/mzaf_12758905673210241851.plus.aac.p.m4a",
     youtubeUrl: "https://www.youtube.com/results?search_query=ใจเย็นๆ+หิน+เหล็ก+ไฟ",
     spotifyUrl: "https://open.spotify.com/search/ใจเย็น+หิน+เหล็ก+ไฟ"
   }
@@ -626,11 +760,9 @@ export async function searchOnlineThaiSongs(query: string, limit = 6): Promise<T
         
         // Pass 1: High confidence patterns (Title & Artist)
         for (const snip of snips) {
-          // Pattern 1: เนื้อเพลง: โต๊ะริม ศิลปิน: นนท์ ธนนท์
           const m1 = snip.match(/เนื้อเพลง:?\s*([^\s][^ศ]+?)\s*ศิลปิน:?\s*([^\s][^อ]+?)(?:\s*อัลบั้ม|\s*$|\.\.\.)/);
           if (m1) { found = { t: m1[1].trim(), a: m1[2].trim() }; break; }
           
-          // Pattern 2: เนื้อเพลง โต๊ะริม - นนท์ ธนนท์
           const m2 = snip.match(/เนื้อเพลง\s+([^-]+)\s*-\s*([^-\n]+)/);
           if (m2 && !m2[1].includes("ถูกต้อง") && !m2[1].includes("ที่แสดงบนเว็บ")) { 
             found = { t: m2[1].trim(), a: m2[2].split(" ")[0].trim() }; 
@@ -638,22 +770,17 @@ export async function searchOnlineThaiSongs(query: string, limit = 6): Promise<T
           }
         }
 
-        // Pass 2: Fallback patterns (Title only or weird formats)
         if (!found) {
           for (const snip of snips) {
-            // Pattern 3: คอร์ดเพลง โต๊ะริม จากศิลปิน นนท์
             const m3 = snip.match(/คอร์ดเพลง\s+([^\s]+)\s+จากศิลปิน\s+([^\s]+)/);
             if (m3) { found = { t: m3[1].trim(), a: m3[2].trim() }; break; }
-            
-            // Pattern 4: เนื้อเพลง โต๊ะริม ที่แสดงบนเว็บ (Siamzone)
             const m4 = snip.match(/เนื้อเพลง\s+([^\s]+)\s+ที่แสดงบนเว็บ/);
             if (m4) { found = { t: m4[1].trim(), a: "" }; break; }
           }
         }
 
         if (found) {
-          if (found.a && found.a.length > 30) found.a = found.a.split(" ")[0]; // Clean long trailing garbage
-          
+          if (found.a && found.a.length > 30) found.a = found.a.split(" ")[0];
           itunesQuery = `${found.t} ${found.a}`.trim();
           fallbackTitle = found.t;
           fallbackArtist = found.a || "ศิลปินไทย";
@@ -667,7 +794,6 @@ export async function searchOnlineThaiSongs(query: string, limit = 6): Promise<T
     if (!resp.ok) return [];
     const data = await resp.json();
 
-    // If iTunes failed but we scraped the title, return a synthetic result
     if (!data.results || data.results.length === 0) {
       if (isScraped) {
         return [{
@@ -698,8 +824,6 @@ export async function searchOnlineThaiSongs(query: string, limit = 6): Promise<T
 
       const titleScore = Math.max(...Object.values(calculateDetailedMatchScore(query, title)).filter(v => typeof v === 'number'));
       const artistScore = Math.max(...Object.values(calculateDetailedMatchScore(query, artist)).filter(v => typeof v === 'number'));
-      
-      // If we scraped it successfully from lyrics, it's a 95% match!
       const bestScore = isScraped ? 0.95 : Math.max(titleScore, artistScore, 0.40);
 
       return {
@@ -711,7 +835,9 @@ export async function searchOnlineThaiSongs(query: string, limit = 6): Promise<T
         lyricsSnippet: isScraped ? `(ค้นพบเนื้อเพลงที่คุณพิมพ์)` : `เพลงฮิตของ ${artist} — "${title}"`,
         fullChorus: isScraped ? `ระบบค้นพบว่าเนื้อเพลงที่คุณพิมพ์คือเพลง "${title}"` : `ค้นพบจากฐานข้อมูลเพลงออนไลน์`,
         gradient: "from-indigo-900 via-purple-900 to-slate-900",
+        albumArt: artwork,
         artworkUrl: artwork,
+        previewUrl: preview,
         previewAudioUrl: preview,
         youtubeUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent(title + " " + artist)}`,
         spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(title + " " + artist)}`,
@@ -745,19 +871,16 @@ export async function searchSongsMaster(query: string, topN = 6): Promise<ThaiSo
 
     for (const t of targets) {
       const d = calculateDetailedMatchScore(cleanQ, t);
-      // Use phonetic as base comparison for finding the best string target
       if (d.phoneticMatch > bestDetailed.phoneticMatch) {
         bestDetailed = d;
         bestMatchedPhrase = t;
       }
     }
 
-    // Determine semantic score
     const isMoodSearch = cleanQ.length <= 15 && !cleanQ.includes(" ");
     const semanticSim = song.vector && isMoodSearch ? Math.max(0, cosineSimilarity(queryVec, song.vector)) : 0;
     bestDetailed.semanticMatch = semanticSim;
 
-    // Apply weights to final score: 50% Text, 30% Phonetic, 15% N-gram, 5% Semantic
     bestDetailed.finalScore = (bestDetailed.textMatch * 0.50) +
                               (bestDetailed.phoneticMatch * 0.30) +
                               (bestDetailed.ngramMatch * 0.15) +
@@ -768,7 +891,6 @@ export async function searchSongsMaster(query: string, topN = 6): Promise<ThaiSo
       matchType = "semantic";
     }
 
-    // Title and Artist Exact Matches should still override to top score
     const isExactTitle = calculateDetailedMatchScore(cleanQ, song.title).textMatch > 0.8;
     const isExactArtist = calculateDetailedMatchScore(cleanQ, song.artist).textMatch > 0.8;
     if (isExactTitle || isExactArtist) {
@@ -778,6 +900,10 @@ export async function searchSongsMaster(query: string, topN = 6): Promise<ThaiSo
 
     return {
       ...song,
+      albumArt: song.albumArt || song.artworkUrl,
+      artworkUrl: song.artworkUrl || song.albumArt,
+      previewUrl: song.previewUrl || song.previewAudioUrl,
+      previewAudioUrl: song.previewAudioUrl || song.previewUrl,
       score: Number(Math.min(0.99, Math.max(0.01, bestDetailed.finalScore)).toFixed(4)),
       matchType,
       matchedPhrase: bestMatchedPhrase,
@@ -789,11 +915,8 @@ export async function searchSongsMaster(query: string, topN = 6): Promise<ThaiSo
   const onlineSongs = await searchOnlineThaiSongs(cleanQ, topN);
   
   const combined = [...scoredLocal, ...onlineSongs];
-  
-  // Sort all results by actual score
   combined.sort((a, b) => (b.score || 0) - (a.score || 0));
 
-  // Remove duplicates by title
   const seen = new Set<string>();
   const unique: ThaiSong[] = [];
   for (const s of combined) {

@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import {
   Mic, MicOff, Search, Music, Sparkles, ExternalLink,
-  Play, Pause, ChevronRight, Wand2, ListMusic, Zap, Globe,
+  Play, Pause, ChevronRight, Wand2, ListMusic, Zap, Globe, X,
 } from "lucide-react";
 import { findSimilarWords, SimilarWord } from "@/lib/embedding";
 import { ThaiSong } from "@/lib/songs";
@@ -24,6 +24,13 @@ const scoreColor = (v: number) =>
 const scoreBarColor = (v: number) =>
   v >= 0.8 ? "bg-emerald-500" : v >= 0.5 ? "bg-amber-400" : "bg-slate-600";
 
+const formatTime = (secs: number) => {
+  if (isNaN(secs) || secs < 0) return "0:00";
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60);
+  return `${m}:${s < 10 ? "0" : ""}${s}`;
+};
+
 export default function HomePage() {
   const [query, setQuery] = useState("");
   const [isListening, setIsListening] = useState(false);
@@ -31,10 +38,16 @@ export default function HomePage() {
   const [speechSupported, setSpeechSupported] = useState(true);
   const [similarWords, setSimilarWords] = useState<SimilarWord[]>([]);
   const [matchedSongs, setMatchedSongs] = useState<ThaiSong[]>([]);
-  const [playingSongId, setPlayingSongId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<"songs" | "words">("songs");
-  const [expandedSong, setExpandedSong] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+
+  // Audio Preview & Mini Player state
+  const [currentTrack, setCurrentTrack] = useState<ThaiSong | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(30);
+  const [audioError, setAudioError] = useState<string | null>(null);
 
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -85,19 +98,137 @@ export default function HomePage() {
     }
   };
 
-  const toggleAudio = (id: string, url?: string) => {
-    if (!url) return;
-    if (playingSongId === id) { audioRef.current?.pause(); setPlayingSongId(null); }
-    else {
-      audioRef.current?.pause();
-      const a = new Audio(url);
-      a.onended = () => setPlayingSongId(null);
-      a.play(); audioRef.current = a; setPlayingSongId(id);
+  // Play or Pause audio preview for a song
+  const handlePlayPreview = (song: ThaiSong) => {
+    const audioUrl = song.previewUrl || song.previewAudioUrl;
+    if (!audioUrl) return;
+
+    if (currentTrack?.id === song.id) {
+      if (isPlaying) {
+        audioRef.current?.pause();
+        setIsPlaying(false);
+      } else {
+        setIsAudioLoading(true);
+        setAudioError(null);
+        audioRef.current?.play()
+          .then(() => {
+            setIsPlaying(true);
+            setIsAudioLoading(false);
+          })
+          .catch((err) => {
+            console.error("Playback error:", err);
+            setIsPlaying(false);
+            setIsAudioLoading(false);
+            setAudioError("ไม่สามารถเล่นตัวอย่างเพลงนี้ได้");
+          });
+      }
+      return;
+    }
+
+    setAudioError(null);
+    setIsAudioLoading(true);
+    setCurrentTrack(song);
+    setCurrentTime(0);
+    setDuration(30);
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = audioUrl;
+      audioRef.current.load();
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+          setIsAudioLoading(false);
+        })
+        .catch((err) => {
+          console.error("Playback error:", err);
+          setIsPlaying(false);
+          setIsAudioLoading(false);
+          setAudioError("ไม่สามารถเล่นตัวอย่างเพลงนี้ได้");
+        });
     }
   };
 
+  const toggleMiniPlayPause = () => {
+    if (!audioRef.current || !currentTrack) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      setIsAudioLoading(true);
+      setAudioError(null);
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+          setIsAudioLoading(false);
+        })
+        .catch((err) => {
+          console.error("Mini playback error:", err);
+          setIsPlaying(false);
+          setIsAudioLoading(false);
+          setAudioError("ไม่สามารถเล่นตัวอย่างเพลงได้");
+        });
+    }
+  };
+
+  const closeMiniPlayer = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+    setIsPlaying(false);
+    setIsAudioLoading(false);
+    setCurrentTrack(null);
+    setCurrentTime(0);
+    setDuration(30);
+    setAudioError(null);
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef.current || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const pct = Math.max(0, Math.min(1, clickX / rect.width));
+    const newTime = pct * duration;
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
   return (
-    <div className="min-h-screen bg-[#07070f] text-white flex flex-col w-full relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#07070f] text-white flex flex-col w-full relative overflow-x-hidden font-sans">
+
+      {/* Hidden HTML5 Audio Element */}
+      <audio
+        ref={audioRef}
+        preload="metadata"
+        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+        onLoadedMetadata={(e) => {
+          const d = e.currentTarget.duration;
+          if (d && !isNaN(d) && isFinite(d)) {
+            setDuration(d);
+          }
+          setIsAudioLoading(false);
+        }}
+        onWaiting={() => setIsAudioLoading(true)}
+        onPlaying={() => {
+          setIsAudioLoading(false);
+          setIsPlaying(true);
+        }}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => {
+          setIsPlaying(false);
+          setCurrentTime(0);
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+          }
+        }}
+        onError={(e) => {
+          console.error("Audio tag error:", e);
+          setIsAudioLoading(false);
+          setIsPlaying(false);
+          setAudioError("ไม่สามารถเล่นเสียงตัวอย่างได้");
+        }}
+      />
 
       {/* AMBIENT GLOWS */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{zIndex: -1}}>
@@ -183,7 +314,7 @@ export default function HomePage() {
       </header>
 
       {/* MAIN */}
-      <main className="flex-1 flex flex-col relative z-10 px-4 sm:px-8 lg:px-12 py-5 sm:py-8 pb-24 sm:pb-28 md:pb-10">
+      <main className={`flex-1 flex flex-col relative z-10 px-4 sm:px-8 lg:px-12 py-5 sm:py-8 ${currentTrack ? 'pb-44 sm:pb-36' : 'pb-24 sm:pb-28 md:pb-10'}`}>
         <div className={`max-w-[1400px] mx-auto w-full flex-1 flex flex-col ${!hasSearched ? "justify-center" : ""}`}>
 
           {/* HERO / EMPTY STATE */}
@@ -292,116 +423,147 @@ export default function HomePage() {
                     matchedSongs.map((song, idx) => {
                       const score = song.score || 0;
                       const isTop = idx === 0;
-                      const isExpanded = expandedSong === song.id;
-                      const isPlaying = playingSongId === song.id;
+                      const artwork = song.albumArt || song.artworkUrl;
+                      const preview = song.previewUrl || song.previewAudioUrl;
+                      const isThisPlaying = currentTrack?.id === song.id && isPlaying;
+                      const isThisLoading = currentTrack?.id === song.id && isAudioLoading;
+
                       return (
                         <div key={song.id}
-                          className={`rounded-2xl border overflow-hidden transition-all duration-300 group hover:-translate-y-0.5 ${
+                          className={`rounded-2xl border overflow-hidden transition-all duration-300 group hover:-translate-y-0.5 flex flex-col justify-between ${
                             isTop
                               ? "bg-gradient-to-br from-violet-900/45 via-purple-900/25 to-slate-900/50 border-violet-500/40 shadow-[0_8px_32px_rgba(139,92,246,0.18)] ring-1 ring-violet-500/15"
                               : "bg-white/[0.025] border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.12] hover:shadow-xl hover:shadow-black/30"
                           }`}>
-                          {isTop && (
-                            <div className="px-3.5 sm:px-4 py-1.5 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/10 border-b border-violet-500/15 flex items-center gap-1.5">
-                              <Sparkles size={10} className="text-violet-400" />
-                              <span className="text-[0.62rem] font-bold text-violet-300 tracking-widest uppercase">Best Match</span>
-                            </div>
-                          )}
-                          <div className="p-3.5 sm:p-4">
-                            <div className="flex items-start gap-2.5 sm:gap-3">
-                              <div className="relative flex-shrink-0">
-                                {song.artworkUrl
-                                  ? <img src={song.artworkUrl} alt={song.title} className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-cover border border-white/10 group-hover:scale-[1.03] transition-transform duration-300" />
-                                  : <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center bg-gradient-to-br ${song.gradient}`}><Music size={18} className="text-white/60" /></div>
-                                }
-                                {!isTop && (
-                                  <div className="absolute -top-1.5 -left-1.5 w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-[#07070f] border border-slate-700 flex items-center justify-center">
-                                    <span className="text-[0.5rem] font-bold text-slate-400">{idx + 1}</span>
-                                  </div>
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0 pt-0.5">
-                                <h3 className="font-bold text-[0.88rem] sm:text-[0.93rem] text-white leading-tight line-clamp-1 group-hover:text-violet-100 transition-colors">{song.title}</h3>
-                                <p className="text-[0.74rem] sm:text-[0.78rem] text-slate-400 mt-0.5 line-clamp-1">{song.artist}</p>
-                                <span className="inline-block mt-1 text-[0.55rem] sm:text-[0.58rem] px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-500 border border-white/[0.06] font-medium">{song.moodCategory}</span>
-                              </div>
-                              <div className={`flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex flex-col items-center justify-center ${
-                                score >= 0.8 ? "bg-emerald-500/15 border border-emerald-500/25" :
-                                score >= 0.5 ? "bg-amber-500/15 border border-amber-500/25" :
-                                "bg-white/[0.05] border border-white/[0.08]"}`}>
-                                <span className={`text-xs sm:text-sm font-black leading-none ${scoreColor(score)}`}>{Math.round(score * 100)}</span>
-                                <span className="text-[0.45rem] text-slate-600 font-medium">%</span>
-                              </div>
-                            </div>
-
-                            {song.detailedScore && (
-                              <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
-                                {[
-                                  { label: "เนื้อร้อง", val: song.detailedScore.textMatch },
-                                  { label: "เสียง", val: song.detailedScore.phoneticMatch },
-                                  { label: "ความหมาย", val: song.detailedScore.semanticMatch },
-                                ].map(({ label, val }) => (
-                                  <div key={label}>
-                                    <div className="flex justify-between mb-0.5">
-                                      <span className="text-[0.54rem] sm:text-[0.56rem] text-slate-600 font-medium">{label}</span>
-                                      <span className="text-[0.54rem] sm:text-[0.56rem] font-mono text-slate-500">{Math.round(val * 100)}%</span>
-                                    </div>
-                                    <div className="h-1 rounded-full bg-black/50 overflow-hidden">
-                                      <div className={`h-full rounded-full ${scoreBarColor(val)} transition-all duration-700`} style={{ width: `${Math.round(val * 100)}%` }} />
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-
-                            {song.matchedPhrase && song.matchedPhrase.length > 4 && (
-                              <div className="mt-2.5 sm:mt-3 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-violet-500/8 to-transparent border-l-2 border-violet-500/40">
-                                <p className="text-[0.7rem] sm:text-[0.73rem] text-slate-400 italic line-clamp-2">"{song.matchedPhrase}"</p>
-                              </div>
-                            )}
-
+                          <div>
+                            {/* Best match banner */}
                             {isTop && (
-                              <div className="flex gap-2 mt-3 sm:mt-3.5">
-                                <a href={song.youtubeUrl} target="_blank" rel="noreferrer"
-                                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 sm:py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/18 active:scale-95 transition-all">
-                                  <ExternalLink size={11} /> YouTube
-                                </a>
-                                <a href={song.spotifyUrl} target="_blank" rel="noreferrer"
-                                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 sm:py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/18 active:scale-95 transition-all">
-                                  <ExternalLink size={11} /> Spotify
-                                </a>
+                              <div className="px-3.5 sm:px-4 py-1.5 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/10 border-b border-violet-500/15 flex items-center gap-1.5">
+                                <Sparkles size={10} className="text-violet-400" />
+                                <span className="text-[0.62rem] font-bold text-violet-300 tracking-widest uppercase">Best Match</span>
                               </div>
                             )}
 
-                            {!isTop && (
-                              <button onClick={() => setExpandedSong(isExpanded ? null : song.id)}
-                                className="mt-2.5 sm:mt-3 w-full text-[0.68rem] text-slate-600 hover:text-violet-400 transition-colors text-center py-0.5">
-                                {isExpanded ? "ย่อลง ▲" : "ดูลิงก์เพิ่มเติม ▼"}
+                            <div className="p-3.5 sm:p-4">
+                              {/* Artwork + Title + Score */}
+                              <div className="flex items-start gap-2.5 sm:gap-3">
+                                <div className="relative flex-shrink-0">
+                                  {artwork ? (
+                                    <img src={artwork} alt={song.title} className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-cover border border-white/10 group-hover:scale-[1.03] transition-transform duration-300" />
+                                  ) : (
+                                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center bg-gradient-to-br ${song.gradient || "from-violet-600 to-pink-600"}`}>
+                                      <Music size={18} className="text-white/60" />
+                                    </div>
+                                  )}
+                                  {!isTop && (
+                                    <div className="absolute -top-1.5 -left-1.5 w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-[#07070f] border border-slate-700 flex items-center justify-center">
+                                      <span className="text-[0.5rem] font-bold text-slate-400">{idx + 1}</span>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div className="flex-1 min-w-0 pt-0.5">
+                                  <h3 className="font-bold text-[0.88rem] sm:text-[0.93rem] text-white leading-tight line-clamp-1 group-hover:text-violet-100 transition-colors">{song.title}</h3>
+                                  <p className="text-[0.74rem] sm:text-[0.78rem] text-slate-400 mt-0.5 line-clamp-1">{song.artist}</p>
+                                  <span className="inline-block mt-1 text-[0.55rem] sm:text-[0.58rem] px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-400 border border-white/[0.06] font-medium">{song.moodCategory}</span>
+                                </div>
+
+                                <div className={`flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex flex-col items-center justify-center ${
+                                  score >= 0.8 ? "bg-emerald-500/15 border border-emerald-500/25" :
+                                  score >= 0.5 ? "bg-amber-500/15 border border-amber-500/25" :
+                                  "bg-white/[0.05] border border-white/[0.08]"}`}>
+                                  <span className={`text-xs sm:text-sm font-black leading-none ${scoreColor(score)}`}>{Math.round(score * 100)}</span>
+                                  <span className="text-[0.45rem] text-slate-600 font-medium">%</span>
+                                </div>
+                              </div>
+
+                              {/* Detailed match score bars */}
+                              {song.detailedScore && (
+                                <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
+                                  {[
+                                    { label: "เนื้อร้อง", val: song.detailedScore.textMatch },
+                                    { label: "เสียง", val: song.detailedScore.phoneticMatch },
+                                    { label: "ความหมาย", val: song.detailedScore.semanticMatch },
+                                  ].map(({ label, val }) => (
+                                    <div key={label}>
+                                      <div className="flex justify-between mb-0.5">
+                                        <span className="text-[0.54rem] sm:text-[0.56rem] text-slate-500 font-medium">{label}</span>
+                                        <span className="text-[0.54rem] sm:text-[0.56rem] font-mono text-slate-400">{Math.round(val * 100)}%</span>
+                                      </div>
+                                      <div className="h-1 rounded-full bg-black/50 overflow-hidden">
+                                        <div className={`h-full rounded-full ${scoreBarColor(val)} transition-all duration-700`} style={{ width: `${Math.round(val * 100)}%` }} />
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* Matched phrase quote */}
+                              {song.matchedPhrase && song.matchedPhrase.length > 4 && (
+                                <div className="mt-2.5 sm:mt-3 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-violet-500/8 to-transparent border-l-2 border-violet-500/40">
+                                  <p className="text-[0.7rem] sm:text-[0.73rem] text-slate-300 italic line-clamp-2">"{song.matchedPhrase}"</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Card Action Buttons (Audio Preview + External Links) */}
+                          <div className="p-3.5 sm:p-4 pt-0 space-y-2">
+                            {/* Requirement 1: Preview button ("▶ ฟังตัวอย่าง" / "⏸ กำลังเล่น") */}
+                            {preview ? (
+                              <button
+                                type="button"
+                                onClick={() => handlePlayPreview(song)}
+                                className={`w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-all active:scale-95 shadow-sm ${
+                                  isThisPlaying
+                                    ? "bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 text-white shadow-violet-500/30 border border-violet-400/40 animate-pulse"
+                                    : "bg-violet-500/15 hover:bg-violet-500/25 border border-violet-500/30 hover:border-violet-500/50 text-violet-200 hover:text-white shadow-violet-500/10"
+                                }`}
+                              >
+                                {isThisLoading ? (
+                                  <>
+                                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    <span>กำลังโหลด...</span>
+                                  </>
+                                ) : isThisPlaying ? (
+                                  <>
+                                    <Pause size={13} className="fill-current" />
+                                    <span>⏸ กำลังเล่น</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Play size={13} className="fill-current ml-0.5" />
+                                    <span>▶ ฟังตัวอย่าง</span>
+                                  </>
+                                )}
+                              </button>
+                            ) : (
+                              /* Requirement 8: No preview URL fallback */
+                              <button
+                                type="button"
+                                disabled
+                                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-white/[0.02] border border-white/[0.05] text-slate-500 text-xs font-medium cursor-not-allowed opacity-50"
+                                title="ไม่มีตัวอย่างเพลงสำหรับเพลงนี้"
+                              >
+                                <span>ไม่มีตัวอย่างเพลง</span>
                               </button>
                             )}
 
-                            {!isTop && isExpanded && (
-                              <div className="mt-2 space-y-2">
-                                {song.previewAudioUrl && (
-                                  <button onClick={() => toggleAudio(song.id, song.previewAudioUrl)}
-                                    className={`w-full flex items-center justify-center gap-2 py-1.5 sm:py-2 rounded-xl text-xs font-medium transition-all ${
-                                      isPlaying ? "bg-violet-600/25 text-violet-300 border border-violet-500/30 animate-pulse" : "bg-white/[0.05] text-slate-400 border border-white/[0.08] hover:text-white"}`}>
-                                    {isPlaying ? <Pause size={12} /> : <Play size={12} />}
-                                    {isPlaying ? "กำลังเล่น..." : "🎧 ฟังตัวอย่าง 30 วิ"}
-                                  </button>
-                                )}
-                                <div className="flex gap-2">
-                                  <a href={song.youtubeUrl} target="_blank" rel="noreferrer"
-                                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 sm:py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/18 active:scale-95 transition-all">
-                                    <ExternalLink size={11} /> YouTube
-                                  </a>
-                                  <a href={song.spotifyUrl} target="_blank" rel="noreferrer"
-                                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 sm:py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/18 active:scale-95 transition-all">
-                                    <ExternalLink size={11} /> Spotify
-                                  </a>
-                                </div>
-                              </div>
-                            )}
+                            {/* YouTube & Spotify Links */}
+                            <div className="flex gap-2">
+                              {song.youtubeUrl && (
+                                <a href={song.youtubeUrl} target="_blank" rel="noreferrer"
+                                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/18 active:scale-95 transition-all">
+                                  <ExternalLink size={11} /> YouTube
+                                </a>
+                              )}
+                              {song.spotifyUrl && (
+                                <a href={song.spotifyUrl} target="_blank" rel="noreferrer"
+                                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/18 active:scale-95 transition-all">
+                                  <ExternalLink size={11} /> Spotify
+                                </a>
+                              )}
+                            </div>
                           </div>
                         </div>
                       );
@@ -443,6 +605,149 @@ export default function HomePage() {
           )}
         </div>
       </main>
+
+      {/* Requirement 4: Audio Mini Player (Bottom Bar) */}
+      {currentTrack && (
+        <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40 bg-[#07070f]/95 backdrop-blur-2xl border-t border-violet-500/30 shadow-[0_-10px_35px_rgba(0,0,0,0.8)] px-4 sm:px-8 py-2.5 sm:py-3 transition-all">
+          <div className="max-w-[1400px] mx-auto flex flex-col gap-1.5">
+            {/* Top row: Track info + Main controls + Close */}
+            <div className="flex items-center justify-between gap-3 sm:gap-6">
+              
+              {/* Left: Album art + Title + Artist */}
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1 sm:flex-initial sm:w-[320px]">
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 shadow-md">
+                  {(currentTrack.albumArt || currentTrack.artworkUrl) ? (
+                    <img
+                      src={currentTrack.albumArt || currentTrack.artworkUrl}
+                      alt={currentTrack.title}
+                      className={`w-full h-full object-cover ${isPlaying ? "scale-105" : ""} transition-transform duration-500`}
+                    />
+                  ) : (
+                    <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${currentTrack.gradient || "from-violet-600 to-pink-600"}`}>
+                      <Music size={18} className="text-white/70" />
+                    </div>
+                  )}
+                  {isPlaying && (
+                    <div className="absolute inset-0 border-2 border-violet-400/50 rounded-xl animate-pulse pointer-events-none" />
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-xs sm:text-sm font-bold text-white truncate leading-tight">
+                      {currentTrack.title}
+                    </h4>
+                    <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-[0.6rem] font-semibold text-violet-300 flex-shrink-0">
+                      ตัวอย่าง 30 วิ
+                    </span>
+                  </div>
+                  <p className="text-[0.7rem] sm:text-xs text-slate-400 truncate mt-0.5">
+                    {currentTrack.artist}
+                  </p>
+                </div>
+              </div>
+
+              {/* Center: Play/Pause Button + Time Display */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={toggleMiniPlayPause}
+                  className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-lg ${
+                    isPlaying
+                      ? "bg-gradient-to-br from-violet-500 via-fuchsia-500 to-pink-600 text-white shadow-violet-500/40 ring-2 ring-violet-400/30"
+                      : "bg-white/10 hover:bg-white/20 text-white border border-white/10 hover:border-violet-500/40"
+                  }`}
+                  title={isPlaying ? "หยุดชั่วคราว" : "เล่น"}
+                >
+                  {isAudioLoading ? (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : isPlaying ? (
+                    <Pause size={17} className="fill-current" />
+                  ) : (
+                    <Play size={17} className="fill-current ml-0.5" />
+                  )}
+                </button>
+
+                {/* Time display (Desktop) */}
+                <div className="text-[0.72rem] font-mono text-slate-400 hidden sm:block min-w-[75px]">
+                  <span className="text-white font-medium">{formatTime(currentTime)}</span>
+                  <span className="text-slate-600 mx-1">/</span>
+                  <span>{formatTime(duration || 30)}</span>
+                </div>
+              </div>
+
+              {/* Right: Actions + Close button */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {currentTrack.youtubeUrl && (
+                  <a
+                    href={currentTrack.youtubeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/20 transition-all"
+                    title="ฟังเต็มบน YouTube"
+                  >
+                    <ExternalLink size={11} />
+                    <span>YouTube</span>
+                  </a>
+                )}
+                {currentTrack.spotifyUrl && (
+                  <a
+                    href={currentTrack.spotifyUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/20 transition-all"
+                    title="ฟังเต็มบน Spotify"
+                  >
+                    <ExternalLink size={11} />
+                    <span>Spotify</span>
+                  </a>
+                )}
+
+                {/* Requirement 4: Close Button */}
+                <button
+                  type="button"
+                  onClick={closeMiniPlayer}
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-all active:scale-90 border border-white/5"
+                  title="ปิดเครื่องเล่นเพลง"
+                >
+                  <X size={15} />
+                </button>
+              </div>
+            </div>
+
+            {/* Requirement 4: Progress Bar with scrubbing & time */}
+            <div className="flex items-center gap-2 pt-0.5">
+              <span className="text-[0.62rem] font-mono text-slate-400 sm:hidden w-7 text-right">
+                {formatTime(currentTime)}
+              </span>
+              
+              <div
+                onClick={handleSeek}
+                className="flex-1 h-2 sm:h-2.5 bg-black/50 rounded-full overflow-hidden border border-white/[0.08] cursor-pointer relative group"
+                title="กดเพื่อเลื่อนตำแหน่งเพลง"
+              >
+                <div
+                  className="h-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 rounded-full transition-all duration-150 relative"
+                  style={{ width: `${Math.min(100, Math.max(0, (currentTime / (duration || 30)) * 100))}%` }}
+                >
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </div>
+
+              <span className="text-[0.62rem] font-mono text-slate-500 sm:hidden w-7">
+                {formatTime(duration || 30)}
+              </span>
+            </div>
+
+            {/* Error message */}
+            {audioError && (
+              <p className="text-[0.68rem] text-rose-400 text-center py-0.5">
+                ⚠️ {audioError}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* MOBILE BOTTOM NAV */}
       <nav className="fixed bottom-0 left-0 right-0 z-30 md:hidden border-t border-white/[0.07] bg-[#07070f]/90 backdrop-blur-2xl shadow-[0_-12px_40px_rgba(0,0,0,0.6)]">
