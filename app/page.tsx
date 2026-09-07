@@ -528,12 +528,12 @@ export default function HomePage() {
                                 ) : isThisPlaying ? (
                                   <>
                                     <Pause size={13} className="fill-current" />
-                                    <span>⏸ กำลังเล่น</span>
+                                    <span>กำลังเล่น</span>
                                   </>
                                 ) : (
                                   <>
                                     <Play size={13} className="fill-current ml-0.5" />
-                                    <span>▶ ฟังตัวอย่าง</span>
+                                    <span>ฟังตัวอย่าง</span>
                                   </>
                                 )}
                               </button>
