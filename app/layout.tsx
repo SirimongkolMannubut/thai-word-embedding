@@ -2,8 +2,8 @@
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Thai Voice Song & Embedding Finder",
-  description: "ค้นหาเพลงไทยตามอารมณ์ และสำรวจ Word Embedding ด้วยเสียงพูด",
+  title: "SongSnap - ค้นหาเพลงจากเนื้อเพลง",
+  description: "ค้นหาเพลงไทยจากเนื้อเพลง • พูดก็ได้ ด้วย AI Matching",
 };
 
 export default function RootLayout({

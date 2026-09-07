@@ -250,7 +250,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h1 className="text-sm sm:text-[0.95rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-pink-300 leading-none tracking-tight">
-                    Thai Song Finder
+                    SongSnap
                   </h1>
                   <p className="text-[0.6rem] sm:text-[0.63rem] text-slate-500 mt-0.5 font-medium">ค้นหาจากเนื้อเพลง • พูดก็ได้</p>
                 </div>

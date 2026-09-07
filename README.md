@@ -1,6 +1,6 @@
-# 🎵 Thai Voice Song & Word Embedding Finder (Next.js)
+# 🎵 SongSnap - ค้นหาเพลงจากเนื้อเพลง
 
-เว็บแอปพลิเคชันค้นหาเพลงไทยตามอารมณ์/ความรู้สึก และสำรวจคำที่มีความหมายใกล้เคียงด้วย **Word Embedding ภาษาไทย** พร้อมรองรับการ **ค้นหาด้วยเสียงพูด (Voice Search)** พัฒนาด้วย **Next.js 15 + Tailwind CSS** พร้อม Deploy บน **Vercel**
+เว็บแอปพลิเคชันค้นหาเพลงไทยจากเนื้อเพลง • พูดก็ได้ ด้วย **AI Matching** และ **Word Embedding ภาษาไทย** พร้อมรองรับการ **ค้นหาด้วยเสียงพูด (Voice Search)** พัฒนาด้วย **Next.js 15 + Tailwind CSS** พร้อม Deploy บน **Vercel**
 
 ---
 
